@@ -1,0 +1,30 @@
+// {
+//    {    
+//          "id": 1,
+//        "name": "Oppo F19 Pro",
+//        "description":
+//          "Experience the blend of elegance and power with the latest OPPO Reno series. Capture professional-grade photos with AI Portrait Camera, power up in minutes with flash charge technology, and enjoy a seamless experience on a vibrant 120Hz AMOLED display. Designed for the modern user, OPPO brings innovative technology to your fingertips",
+//        "price": 19000,
+//        "image":
+//          "https://sell.gameloot.in/wp-content/uploads/sites/4/2023/06/OPPO-F19-Pro-8GB-RAM256GB-Storage.jpg",
+//      },
+//      {
+//        "id": 2,
+//        "name": "Samsung Galaxy M32",
+//        "description":
+//          "Samsung offers premium Android smartphones, including the AI-powered Galaxy S26 Ultra with innovative Privacy Display, versatile Galaxy A-series with IP67 water resistance, and folding devices. Experience cutting-edge technology, stunning displays, and powerful performance in every Samsung smartphone.",
+//        "price": 20000,
+//        "image":
+//          "https://s3bg.cashify.in/gpro/uploads/2021/06/10114015/samsung-galaxy-s22-ultra-front-display-1.jpg",
+//      },
+//      {
+//        "id": 3,
+//        "name": "Redmi Note 11 Pro",
+//        "description":
+//          "Redmi Note 11 Pro features a stunning AMOLED display, powerful MediaTek Helio G96 processor, and a versatile quad-camera setup for capturing every moment. With a large battery and fast charging, it offers an immersive experience for gaming, photography, and everyday use.",
+//        "price": 15000,
+//        "image":
+//          "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQGVlV3AVUlcU2aDB6cwAG7WY8S2HP_RfXt7LKEfXqJ1XjTcsQ28tcpRVMzevGKf7L2nO4weVMfe_H3nK1fEzRLxrv9MSwuXPhYoZ80kbF1Q0NPxXbg97tVElI",
+//      }
+   
+// }
