@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { createContext, useEffect, useState, useContext } from "react";
 import axios from "axios";
 
-const API_URI = `http://localhost:3000/api`;
+const API_URI = `/api`;
 const productcontext = createContext();
 
 export const ProductProvider = ({ children }) => {
