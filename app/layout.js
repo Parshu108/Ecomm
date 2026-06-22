@@ -27,6 +27,7 @@ export const metadata = {
         height: 630,
       },
     ],
+    author: "Parshuram",
     locale: "en_US",
     type: "website",
   },
