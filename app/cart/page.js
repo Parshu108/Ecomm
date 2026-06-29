@@ -52,10 +52,10 @@ const CartPages = () => {
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen py-10">
-      <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-3 gap-8">
+    <div className="bg-gray-100 min-h-screen py-10">
+      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-3 gap-8">
         {/* LEFT — CART ITEMS */}
-        <div className="lg:col-span-2 space-y-4">
+        <div className="lg:col-span-2 space-y-5">
           <div className="flex items-center gap-3 mb-6">
             <h1 className="text-2xl font-semibold text-gray-900">
               Shopping cart
@@ -68,7 +68,7 @@ const CartPages = () => {
           {cart.map((product) => (
             <div
               key={product._id}
-              className="bg-white border border-gray-100 rounded-2xl p-6 flex gap-4 items-start hover:border-gray-200 transition-colors"
+              className="bg-white border w-180 border-gray-200 rounded-2xl p-10 flex gap-4 items-start hover:bg-gray-200 hover:border-gray-200 transition-colors"
             >
               {/* IMAGE */}
               <div className="w-20 h-20 min-w-[100px] bg-gray-50 border border-gray-100 rounded-xl flex items-center justify-center overflow-hidden">
@@ -87,7 +87,7 @@ const CartPages = () => {
                 <h2 className="text-sm font-medium text-gray-900 truncate">
                   {product.title}
                 </h2>
-                <p className="text-xs text-gray-400 mt-0.5 mb-3">
+                <p className="text-xs text-gray-600 mt-0.5 mb-3">
                   ₹{product.price} per item
                 </p>
 

@@ -16,9 +16,16 @@ import { IoWatchOutline } from "react-icons/io5";
 import { IoGameControllerOutline } from "react-icons/io5";
 import { MdLaptopMac } from "react-icons/md";
 import { useEffect, useState } from "react";
+import NewsletterSection from "./pages/newlatter/page";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
+  const [filtered, setFiltered] = useState([]);
+  const [input, setInput] = useState("");
+  
+
+
+ 
 
   useEffect(() => {
     const getPost = async () => {
@@ -41,6 +48,8 @@ export default function Home() {
 
   return (
     <>
+      
+
       <div>
         <Carousel
           plugins={[
@@ -153,6 +162,9 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      {/* Newsletter Section */}
+      <NewsletterSection />
     </>
   );
 }

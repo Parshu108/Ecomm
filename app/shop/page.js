@@ -11,6 +11,7 @@ export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filtered, setFiltered] = useState([]);
+  const [input, setInput] = useState([]);
 
   const { addTocart, getCartdata } = useProductcontext();
 
@@ -47,6 +48,13 @@ export default function ProductsPage() {
     setFiltered(data);
   };
 
+  const filterbyname = (value) => {
+    const data = products.filter((item) =>
+      item.name.toLowerCase().includes(value.toLowerCase()),
+    );
+    setFiltered(data);
+  };
+
   // ✅ Loading state
   if (loading) {
     return <p className="text-center mt-10">Loading products...</p>;
@@ -54,6 +62,45 @@ export default function ProductsPage() {
 
   return (
     <>
+      <div className="w-full bg-gray-800 py-2 px-3 flex items-center gap-2">
+        {/* Search Bar */}
+        <div className="flex flex-1 h-12 w-50 rounded-md overflow-hidden">
+          {/* Input */}
+          <input
+            type="text"
+            placeholder="Search here"
+            value={input}
+            onChange={(e) => {
+              setInput(e.target.value);
+              filterbyname(e.target.value);
+            }}
+            className="flex-1 px-4 text-sm text-[#131921] placeholder-[#767676] bg-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#febd69]"
+          />
+
+          {/* Search Button */}
+          <button
+            className="bg-[#febd69] hover:bg-[#f3a847] active:bg-[#e8991c] w-12 flex items-center justify-center transition-colors duration-150"
+            aria-label="Search"
+            onClick={() => filterbyname(input)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#131921"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.34-4.34" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
       <ToastContainer
         position="top-right"
         autoClose={1500}

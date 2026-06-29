@@ -8,6 +8,7 @@ export default function Sidebar() {
   const menu = [
     { name: "Dashboard", icon: LayoutDashboard, link: "/dashboard" },
     { name: "Profile", icon: User, link: "/dashboard/user" },
+    { name: "AddProduct", icon: Settings, link: "/dashboard/newproduct" },
     { name: "Order", icon: ShoppingBasket, link: "/dashboard/order" },
     { name: "Logout", icon: Settings, link: "/router/login" },
   ];
