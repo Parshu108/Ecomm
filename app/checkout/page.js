@@ -1,6 +1,7 @@
 "use client";
+
 import { useContext, useEffect, useState } from "react";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"; // ✅ make sure this line exists
 import productcontext from "../context/productcontext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -9,7 +10,7 @@ import Image from "next/image";
 import axios from "axios";
 
 const CheckoutPage = () => {
-  // const router = useRouter();
+  const router = useRouter();
   const { cart, getCartdata, clearCart } = useContext(productcontext);
   const [billingInfo, setBillingInfo] = useState({
     firstName: "",
@@ -76,7 +77,7 @@ const CheckoutPage = () => {
   const handlePayment = async () => {
     try {
       const response = await axios.post("/api/order", {
-        amount: calculateTotal() * 100,
+        amount: calculateTotal(),
       });
 
       const data = response.data;
@@ -99,24 +100,37 @@ const CheckoutPage = () => {
           email: billingInfo.email,
           // mobile is intentionally omitted
         },
-        handler: function (response) {
-          const orderDetails = {
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature,
-            razorpay_order: data,
-            items: cart,
-            billingInfo,
-            shippingInfo: sameAsBilling ? billingInfo : shippingInfo,
-            total: calculateTotal(),
-            currency: data.currency,
-            createdAt: new Date().toISOString(),
-          };
+        handler: async function (response) {
+          try {
+            const verifyRes = await axios.post("/api/verify-order", {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
 
-          localStorage.setItem("lastOrder", JSON.stringify(orderDetails));
-          toast.success("Payment successful!");
-          clearCart();
-          // router.push("/dashboard/order");
+            if (verifyRes.data.success) {
+              const orderDetails = {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                items: cart,
+                billingInfo,
+                shippingInfo: sameAsBilling ? billingInfo : shippingInfo,
+                total: calculateTotal(),
+                currency: data.currency,
+                createdAt: new Date().toISOString(),
+              };
+              localStorage.setItem("lastOrder", JSON.stringify(orderDetails));
+              toast.success("Payment verified and successful!");
+              clearCart();
+              router.push("/dashboard/order");
+            } else {
+              toast.error("Payment verification failed!");
+            }
+          } catch (err) {
+            console.error(err);
+            toast.error("Verification error. Contact support.");
+          }
         },
       };
 
@@ -371,7 +385,7 @@ const CheckoutPage = () => {
                     <div className="border-t pt-4">
                       <div className="flex justify-between text-lg font-semibold">
                         <span>Total:</span>
-                        <span>${calculateTotal()}</span>
+                        <span>₹{calculateTotal()}</span>
                       </div>
                     </div>
 

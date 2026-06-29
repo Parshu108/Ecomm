@@ -35,8 +35,9 @@ export async function POST(request) {
     }
 
     const instance = await getInstance();
+    // ✅ app/api/order/route.js — multiply here
     const options = {
-      amount,
+      amount: Math.round(amount * 100), // ₹231918 × 100 = 23191800 paise ✅
       currency: "INR",
       receipt: `order_rcptid_${Date.now()}`,
       payment_capture: 1,
