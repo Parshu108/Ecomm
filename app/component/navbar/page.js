@@ -9,10 +9,15 @@ import { useProductcontext } from "@/app/context/productcontext";
 
 const Navbar = () => {
   const { products, cart } = useProductcontext();
-  const total = cart.reduce(
-    (acc, item) => acc + item.price * (item.qty || 1),
-    0,
-  );
+  // app/component/navbar/page.js
+
+  // ✅ Array.isArray check lagao
+  const total = Array.isArray(cart)
+    ? cart.reduce((acc, item) => acc + item.price * (item.qty || 1), 0)
+    : 0;
+
+  // ✅ Cart count bhi safe karo
+  const cartCount = Array.isArray(cart) ? cart.length : 0;
   return (
     <>
       <nav className="w-full bg-[#ffffff] shadow-sm border-b border-[#9a8c6a] text-[#755e00]">
@@ -119,6 +124,6 @@ const Navbar = () => {
       </nav>
     </>
   );
-};
+};;
 
 export default Navbar;

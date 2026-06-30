@@ -1,8 +1,5 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import connectDB from "@/lib/mongodb";
-import User from "@/model/user";
-import bcrypt from "bcrypt";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -11,44 +8,43 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          return null;
-        }
+        if (!credentials?.email || !credentials?.password) return null;
 
-        await connectDB();
-
-        const user = await User.findOne({
-          email: credentials.email,
-        });
-
-        if (!user) return null;
-
-        const isValid = await bcrypt.compare(
-          credentials.password,
-          user.password,
+        // ✅ API call karo directly — MongoDB middleware mein mat chhuo
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/auth/verify`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: credentials.email,
+              password: credentials.password,
+            }),
+          },
         );
 
-        if (!isValid) return null;
+        if (!res.ok) return null;
 
-        return {
-          id: user._id.toString(),
-          email: user.email,
-          name: user.name,
-        };
+        const user = await res.json();
+        return user;
       },
     }),
   ],
 
-  session: {
-    strategy: "jwt",
-  },
-
+  session: { strategy: "jwt" },
   secret: process.env.AUTH_SECRET,
   trustHost: true,
+  pages: { signIn: "/router/login" },
 
-  pages: {
-    signIn: "/router/login",
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) token.id = user.id;
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) session.user.id = token.id;
+      return session;
+    },
   },
 });
