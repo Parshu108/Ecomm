@@ -144,21 +144,21 @@ const CheckoutPage = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-[#ffffff] py-8">
+      <div className="min-h-screen bg-black py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-yellow-500 mb-8">Checkout</h1>
+          <h1 className="text-3xl font-bold text-[#95D7DE] mb-8">Checkout</h1>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left Column - Forms */}
             <div className="space-y-8">
               {/* Billing Information */}
-              <Card className="p-6 border border-yellow-500/40 bg-[#ffffff]">
-                <h2 className="text-xl font-semibold text-yellow-500 mb-4">
+              <Card className="p-6 border border-[#95D7DE]/30 bg-[#001B38]">
+                <h2 className="text-xl font-semibold text-[#95D7DE] mb-4">
                   Billing Information
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-[#A0A0A0] mb-1">
                       First Name *
                     </label>
                     <input
@@ -166,12 +166,12 @@ const CheckoutPage = () => {
                       name="firstName"
                       value={billingInfo.firstName}
                       onChange={handleBillingChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                      className="w-full px-3 py-2 bg-black border border-[#95D7DE]/20 rounded-md text-white placeholder:text-[#A0A0A0] focus:outline-none focus:ring-2 focus:ring-[#95D7DE]"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-[#A0A0A0] mb-1">
                       Last Name *
                     </label>
                     <input
@@ -179,12 +179,12 @@ const CheckoutPage = () => {
                       name="lastName"
                       value={billingInfo.lastName}
                       onChange={handleBillingChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                      className="w-full px-3 py-2 bg-black border border-[#95D7DE]/20 rounded-md text-white placeholder:text-[#A0A0A0] focus:outline-none focus:ring-2 focus:ring-[#95D7DE]"
                       required
                     />
                   </div>
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-[#A0A0A0] mb-1">
                       Email *
                     </label>
                     <input
@@ -192,12 +192,12 @@ const CheckoutPage = () => {
                       name="email"
                       value={billingInfo.email}
                       onChange={handleBillingChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                      className="w-full px-3 py-2 bg-black border border-[#95D7DE]/20 rounded-md text-white placeholder:text-[#A0A0A0] focus:outline-none focus:ring-2 focus:ring-[#95D7DE]"
                       required
                     />
                   </div>
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-[#A0A0A0] mb-1">
                       Address *
                     </label>
                     <input
@@ -205,12 +205,12 @@ const CheckoutPage = () => {
                       name="address"
                       value={billingInfo.address}
                       onChange={handleBillingChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                      className="w-full px-3 py-2 bg-black border border-[#95D7DE]/20 rounded-md text-white placeholder:text-[#A0A0A0] focus:outline-none focus:ring-2 focus:ring-[#95D7DE]"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-[#A0A0A0] mb-1">
                       City *
                     </label>
                     <input
@@ -218,12 +218,12 @@ const CheckoutPage = () => {
                       name="city"
                       value={billingInfo.city}
                       onChange={handleBillingChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                      className="w-full px-3 py-2 bg-black border border-[#95D7DE]/20 rounded-md text-white placeholder:text-[#A0A0A0] focus:outline-none focus:ring-2 focus:ring-[#95D7DE]"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-[#A0A0A0] mb-1">
                       State *
                     </label>
                     <input
@@ -231,12 +231,12 @@ const CheckoutPage = () => {
                       name="state"
                       value={billingInfo.state}
                       onChange={handleBillingChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                      className="w-full px-3 py-2 bg-black border border-[#95D7DE]/20 rounded-md text-white placeholder:text-[#A0A0A0] focus:outline-none focus:ring-2 focus:ring-[#95D7DE]"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-[#A0A0A0] mb-1">
                       ZIP Code *
                     </label>
                     <input
@@ -244,7 +244,7 @@ const CheckoutPage = () => {
                       name="zipCode"
                       value={billingInfo.zipCode}
                       onChange={handleBillingChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                      className="w-full px-3 py-2 bg-black border border-[#95D7DE]/20 rounded-md text-white placeholder:text-[#A0A0A0] focus:outline-none focus:ring-2 focus:ring-[#95D7DE]"
                       required
                     />
                   </div>
@@ -252,9 +252,9 @@ const CheckoutPage = () => {
               </Card>
 
               {/* Shipping Information */}
-              <Card className="p-6">
+              <Card className="p-6 border border-[#95D7DE]/30 bg-[#001B38]">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold">
+                  <h2 className="text-xl font-semibold text-white">
                     Shipping Information
                   </h2>
                   <label className="flex items-center">
@@ -262,15 +262,17 @@ const CheckoutPage = () => {
                       type="checkbox"
                       checked={sameAsBilling}
                       onChange={handleSameAsBilling}
-                      className="mr-2"
+                      className="mr-2 accent-[#95D7DE]"
                     />
-                    <span className="text-sm">Same as billing</span>
+                    <span className="text-sm text-[#A0A0A0]">
+                      Same as billing
+                    </span>
                   </label>
                 </div>
                 {!sameAsBilling && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-[#A0A0A0] mb-1">
                         First Name *
                       </label>
                       <input
@@ -278,12 +280,12 @@ const CheckoutPage = () => {
                         name="firstName"
                         value={shippingInfo.firstName}
                         onChange={handleShippingChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                        className="w-full px-3 py-2 bg-black border border-[#95D7DE]/20 rounded-md text-white placeholder:text-[#A0A0A0] focus:outline-none focus:ring-2 focus:ring-[#95D7DE]"
                         required
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-[#A0A0A0] mb-1">
                         Last Name *
                       </label>
                       <input
@@ -291,12 +293,12 @@ const CheckoutPage = () => {
                         name="lastName"
                         value={shippingInfo.lastName}
                         onChange={handleShippingChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                        className="w-full px-3 py-2 bg-black border border-[#95D7DE]/20 rounded-md text-white placeholder:text-[#A0A0A0] focus:outline-none focus:ring-2 focus:ring-[#95D7DE]"
                         required
                       />
                     </div>
                     <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-[#A0A0A0] mb-1">
                         Address *
                       </label>
                       <input
@@ -304,12 +306,12 @@ const CheckoutPage = () => {
                         name="address"
                         value={shippingInfo.address}
                         onChange={handleShippingChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                        className="w-full px-3 py-2 bg-black border border-[#95D7DE]/20 rounded-md text-white placeholder:text-[#A0A0A0] focus:outline-none focus:ring-2 focus:ring-[#95D7DE]"
                         required
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-[#A0A0A0] mb-1">
                         City *
                       </label>
                       <input
@@ -317,12 +319,12 @@ const CheckoutPage = () => {
                         name="city"
                         value={shippingInfo.city}
                         onChange={handleShippingChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                        className="w-full px-3 py-2 bg-black border border-[#95D7DE]/20 rounded-md text-white placeholder:text-[#A0A0A0] focus:outline-none focus:ring-2 focus:ring-[#95D7DE]"
                         required
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-[#A0A0A0] mb-1">
                         State *
                       </label>
                       <input
@@ -330,12 +332,12 @@ const CheckoutPage = () => {
                         name="state"
                         value={shippingInfo.state}
                         onChange={handleShippingChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                        className="w-full px-3 py-2 bg-black border border-[#95D7DE]/20 rounded-md text-white placeholder:text-[#A0A0A0] focus:outline-none focus:ring-2 focus:ring-[#95D7DE]"
                         required
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-[#A0A0A0] mb-1">
                         ZIP Code *
                       </label>
                       <input
@@ -343,7 +345,7 @@ const CheckoutPage = () => {
                         name="zipCode"
                         value={shippingInfo.zipCode}
                         onChange={handleShippingChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                        className="w-full px-3 py-2 bg-black border border-[#95D7DE]/20 rounded-md text-white placeholder:text-[#A0A0A0] focus:outline-none focus:ring-2 focus:ring-[#95D7DE]"
                         required
                       />
                     </div>
@@ -354,11 +356,13 @@ const CheckoutPage = () => {
 
             {/* Right Column - Order Summary */}
             <div>
-              <Card className="p-6 sticky top-4">
-                <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+              <Card className="p-6 sticky top-4 border border-[#95D7DE]/30 bg-[#001B38]">
+                <h2 className="text-xl font-semibold text-white mb-4">
+                  Order Summary
+                </h2>
 
                 {cart.length === 0 ? (
-                  <p className="text-gray-500">Your cart is empty</p>
+                  <p className="text-[#A0A0A0]">Your cart is empty</p>
                 ) : (
                   <>
                     <div className="space-y-4 mb-4">
@@ -372,18 +376,20 @@ const CheckoutPage = () => {
                             alt={item.name}
                             width={300}
                             height={300}
-                            className="w-16 h-16 object-cover rounded-md"
+                            className="w-16 h-16 object-cover rounded-md border border-[#95D7DE]/10"
                           />
                           <div className="flex-1">
-                            <h3 className="font-medium">{item.name}</h3>
-                            <p className="text-gray-600">${item.price}</p>
+                            <h3 className="font-medium text-white">
+                              {item.name}
+                            </h3>
+                            <p className="text-[#A0A0A0]">${item.price}</p>
                           </div>
                         </div>
                       ))}
                     </div>
 
-                    <div className="border-t pt-4">
-                      <div className="flex justify-between text-lg font-semibold">
+                    <div className="border-t border-[#95D7DE]/10 pt-4">
+                      <div className="flex justify-between text-lg font-semibold text-white">
                         <span>Total:</span>
                         <span>₹{calculateTotal()}</span>
                       </div>
@@ -391,7 +397,7 @@ const CheckoutPage = () => {
 
                     <Button
                       onClick={handlePayment}
-                      className="w-full mt-6 p-5 bg-yellow-500 hover:bg-yellow-600 text-white "
+                      className="w-full mt-6 p-5 bg-[#95D7DE] hover:bg-[#7FC5CD] text-black font-semibold"
                     >
                       Place Order
                     </Button>

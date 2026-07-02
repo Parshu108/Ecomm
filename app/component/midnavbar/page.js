@@ -16,29 +16,22 @@ const Midnavbar = () => {
     "projecter",
   ];
 
-  useEffect(()=>{
-    
-  });
+  useEffect(() => {});
 
-  const handleSubmit=()=>{
-
-    
-   console.log("Input:", input);
-   console.log("Selected Category:", category);
-
-  }
-
+  const handleSubmit = () => {
+    console.log("Input:", input);
+    console.log("Selected Category:", category);
+  };
 
   return (
-    <div className="w-full bg-gray-800 py-2 px-3 flex items-center gap-2">
-      
+    <div className="w-full bg-[#001B38] py-2 px-3 flex items-center gap-2 border-b border-[#95D7DE]/10">
       {/* Search Bar */}
-      <div className="flex flex-1 h-10 w-50 rounded-md overflow-hidden">
+      <div className="flex flex-1 h-10 w-50 rounded-md overflow-hidden border border-[#95D7DE]/20">
         {/* Category Dropdown */}
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="bg-[#f3f3f3] text-[#131921] text-xs font-medium px-2 border-r border-[#cdcdcd] cursor-pointer hover:bg-[#e8e8e8] focus:outline-none shrink-0 hidden sm:block"
+          className="bg-black text-[#A0A0A0] text-xs font-medium px-2 border-r border-[#95D7DE]/20 cursor-pointer hover:bg-[#001B38] hover:text-white focus:outline-none shrink-0 hidden sm:block"
         >
           {categories.map((cat) => (
             <option key={cat} value={cat}>
@@ -51,13 +44,13 @@ const Midnavbar = () => {
         <input
           type="text"
           placeholder="Search here"
-          onChange={(e)=>setInput(e.target.value)}
-          className="flex-1 px-4 text-sm text-[#131921] placeholder-[#767676] bg-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#febd69]"
+          onChange={(e) => setInput(e.target.value)}
+          className="flex-1 px-4 text-sm text-white placeholder-[#A0A0A0] bg-black focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#95D7DE]"
         />
 
         {/* Search Button */}
         <button
-          className="bg-[#febd69] hover:bg-[#f3a847] active:bg-[#e8991c] w-12 flex items-center justify-center transition-colors duration-150"
+          className="bg-[#95D7DE] hover:bg-[#7FC5CD] active:bg-[#6BB8C0] w-12 flex items-center justify-center transition-colors duration-150"
           aria-label="Search"
           onClick={handleSubmit}
         >
@@ -67,7 +60,7 @@ const Midnavbar = () => {
             height="20"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#131921"
+            stroke="#000000"
             strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"

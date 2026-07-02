@@ -13,7 +13,7 @@ import {
 const Footer = () => {
   return (
     <motion.footer
-      className="bg-slate-900 text-slate-300"
+      className="bg-[#001B38] text-[#A0A0A0]"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, ease: "easeOut" }}
@@ -37,12 +37,12 @@ const Footer = () => {
                 <p className="text-xl font-semibold text-white leading-none">
                   Shop0
                 </p>
-                <p className="text-[10px] tracking-[2px] uppercase text-yellow-400 mt-0.5">
+                <p className="text-[10px] tracking-[2px] uppercase text-[#95D7DE] mt-0.5">
                   Premium Store
                 </p>
               </div>
             </Link>
-            <p className="text-sm text-slate-400 leading-relaxed">
+            <p className="text-sm text-[#A0A0A0] leading-relaxed">
               Your one-stop destination for premium products. Quality, trust,
               and convenience — delivered to your door.
             </p>
@@ -57,7 +57,7 @@ const Footer = () => {
                   key={label}
                   href="#"
                   aria-label={label}
-                  className="flex h-9 w-9 items-center justify-center rounded-md border border-slate-700 bg-slate-800 text-slate-400 hover:bg-yellow-400 hover:text-slate-900 hover:border-yellow-400 transition-all duration-200"
+                  className="flex h-9 w-9 items-center justify-center rounded-md border border-[#95D7DE]/20 bg-black text-[#A0A0A0] hover:bg-[#95D7DE] hover:text-black hover:border-[#95D7DE] transition-all duration-200"
                 >
                   {icon}
                 </a>
@@ -80,7 +80,7 @@ const Footer = () => {
                 <li key={item}>
                   <Link
                     href="#"
-                    className="text-md text-slate-400 hover:text-yellow-400 transition-colors"
+                    className="text-md text-[#A0A0A0] hover:text-[#95D7DE] transition-colors"
                   >
                     {item}
                   </Link>
@@ -104,7 +104,7 @@ const Footer = () => {
                 <li key={item}>
                   <Link
                     href="#"
-                    className="text-md text-slate-400 hover:text-yellow-400 transition-colors"
+                    className="text-md text-[#A0A0A0] hover:text-[#95D7DE] transition-colors"
                   >
                     {item}
                   </Link>
@@ -124,7 +124,7 @@ const Footer = () => {
                   <li key={item}>
                     <Link
                       href="#"
-                      className="text-md text-slate-400 hover:text-yellow-400 transition-colors"
+                      className="text-md text-[#A0A0A0] hover:text-[#95D7DE] transition-colors"
                     >
                       {item}
                     </Link>
@@ -136,16 +136,16 @@ const Footer = () => {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 border-t border-slate-800 pt-7 flex flex-col items-center justify-between gap-4 sm:flex-row">
-          <p className="text-xs text-slate-500">
+        <div className="mt-12 border-t border-[#95D7DE]/10 pt-7 flex flex-col items-center justify-between gap-4 sm:flex-row">
+          <p className="text-xs text-[#A0A0A0]">
             © 2025 ShopNest. All rights reserved.
           </p>
           <div className="flex items-center gap-3 flex-wrap">
-            <span className="text-xs text-slate-500">We accept</span>
+            <span className="text-xs text-[#A0A0A0]">We accept</span>
             {["Visa", "Mastercard", "Razorpay", "UPI", "PayPal"].map((p) => (
               <span
                 key={p}
-                className="rounded border border-slate-700 bg-slate-800 px-2.5 py-1 text-[11px] font-medium text-slate-400"
+                className="rounded border border-[#95D7DE]/20 bg-black px-2.5 py-1 text-[11px] font-medium text-[#A0A0A0]"
               >
                 {p}
               </span>

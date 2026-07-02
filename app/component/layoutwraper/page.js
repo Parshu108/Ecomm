@@ -8,7 +8,7 @@ export default function LayoutWrapper({ children }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex bg-gray-50 min-h-screen">
+    <div className="flex bg-black min-h-screen">
       {/* Sidebar */}
       <div
         className={`fixed z-50 h-full transition-transform duration-300 

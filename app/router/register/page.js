@@ -53,7 +53,7 @@ const Page = () => {
       alert(
         formData.role === "seller"
           ? "Seller account created! Waiting for admin approval."
-          : "User Registered!"
+          : "User Registered!",
       );
       window.location.href = "/router/login";
     } catch (err) {
@@ -63,7 +63,7 @@ const Page = () => {
   };
 
   return (
-    <div className="min-h-80  bg-white  flex items-center  justify-center px-4 py-8">
+    <div className="min-h-80 bg-black flex items-center justify-center px-4 py-8">
       <motion.div
         className="w-full max-w-lg"
         initial={{ opacity: 0, scale: 0.9 }}
@@ -72,15 +72,15 @@ const Page = () => {
       >
         {/* Card Container */}
         <motion.div
-          className="bg-white rounded-2xl shadow-2xl border overflow-hidden"
+          className="bg-[#001B38] rounded-2xl shadow-2xl border border-[#95D7DE]/10 overflow-hidden"
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.7, delay: 0.2 }}
         >
           {/* Header */}
-          <div className="bg-transprant px-4 py-4">
+          <div className="bg-transparent px-4 py-4">
             <motion.h1
-              className="text-3xl font-bold text-yellow-400 text-center"
+              className="text-3xl font-bold text-[#95D7DE] text-center"
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.4 }}
@@ -88,7 +88,7 @@ const Page = () => {
               Create Account
             </motion.h1>
             <motion.p
-              className="text-slate-300 text-center mt-1"
+              className="text-[#A0A0A0] text-center mt-1"
               initial={{ y: -10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.5 }}
@@ -96,7 +96,7 @@ const Page = () => {
               Join our community today
             </motion.p>
           </div>
-          <hr/>
+          <hr className="border-[#95D7DE]/10" />
 
           {/* Form Section */}
           <motion.form
@@ -113,7 +113,7 @@ const Page = () => {
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.45 }}
             >
-              <label className="block text-sm font-semibold text-black">
+              <label className="block text-sm font-semibold text-white">
                 Account Type
               </label>
               <div className="grid grid-cols-2 gap-3">
@@ -124,8 +124,8 @@ const Page = () => {
                   }
                   className={`py-3 rounded-lg border-2 font-semibold transition-all ${
                     formData.role === "user"
-                      ? "border-yellow-500 bg-yellow-50 text-black"
-                      : "border-slate-300 text-slate-500"
+                      ? "border-[#95D7DE] bg-[#95D7DE]/10 text-[#95D7DE]"
+                      : "border-[#95D7DE]/20 text-[#A0A0A0]"
                   }`}
                 >
                   Customer
@@ -137,8 +137,8 @@ const Page = () => {
                   }
                   className={`py-3 rounded-lg border-2 font-semibold transition-all ${
                     formData.role === "seller"
-                      ? "border-yellow-500 bg-yellow-50 text-black"
-                      : "border-slate-300 text-slate-500"
+                      ? "border-[#95D7DE] bg-[#95D7DE]/10 text-[#95D7DE]"
+                      : "border-[#95D7DE]/20 text-[#A0A0A0]"
                   }`}
                 >
                   Seller
@@ -155,7 +155,7 @@ const Page = () => {
             >
               <label
                 htmlFor="firstName"
-                className="block text-sm font-semibold text-black"
+                className="block text-sm font-semibold text-white"
               >
                 Name
               </label>
@@ -166,11 +166,11 @@ const Page = () => {
                 placeholder="Enter your first name"
                 value={formData.firstName}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-slate-300 rounded-lg focus:border-yellow-500/40 focus:ring-2 focus:ring-yellow-500/20 outline-none transition-all text-black placeholder-slate-400"
-                initial={{ borderColor: "#cbd5e1" }}
+                className="w-full px-4 py-3 bg-black border-2 border-[#95D7DE]/20 rounded-lg focus:border-[#95D7DE] focus:ring-2 focus:ring-[#95D7DE]/20 outline-none transition-all text-white placeholder-[#A0A0A0]"
+                initial={{ borderColor: "rgba(149, 215, 222, 0.2)" }}
                 whileFocus={{
-                  borderColor: "#fbbf24",
-                  boxShadow: "0 0 0 3px rgba(251, 191, 36, 0.1)",
+                  borderColor: "#95D7DE",
+                  boxShadow: "0 0 0 3px rgba(149, 215, 222, 0.15)",
                 }}
               />
             </motion.div>
@@ -184,7 +184,7 @@ const Page = () => {
             >
               <label
                 htmlFor="email"
-                className="block text-sm font-semibold text-black"
+                className="block text-sm font-semibold text-white"
               >
                 Email Address
               </label>
@@ -195,11 +195,11 @@ const Page = () => {
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-slate-300 rounded-lg focus:border-yellow-500/40 focus:ring-2 focus:ring-yellow-500/20 outline-none transition-all text-black placeholder-slate-400"
-                initial={{ borderColor: "#cbd5e1" }}
+                className="w-full px-4 py-3 bg-black border-2 border-[#95D7DE]/20 rounded-lg focus:border-[#95D7DE] focus:ring-2 focus:ring-[#95D7DE]/20 outline-none transition-all text-white placeholder-[#A0A0A0]"
+                initial={{ borderColor: "rgba(149, 215, 222, 0.2)" }}
                 whileFocus={{
-                  borderColor: "#fbbf24",
-                  boxShadow: "0 0 0 3px rgba(251, 191, 36, 0.1)",
+                  borderColor: "#95D7DE",
+                  boxShadow: "0 0 0 3px rgba(149, 215, 222, 0.15)",
                 }}
               />
             </motion.div>
@@ -214,7 +214,7 @@ const Page = () => {
               >
                 <label
                   htmlFor="shopName"
-                  className="block text-sm font-semibold text-black"
+                  className="block text-sm font-semibold text-white"
                 >
                   Shop Name
                 </label>
@@ -225,7 +225,7 @@ const Page = () => {
                   placeholder="Enter your shop/business name"
                   value={formData.shopName}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-slate-300 rounded-lg focus:border-yellow-500/40 focus:ring-2 focus:ring-yellow-500/20 outline-none transition-all text-black placeholder-slate-400"
+                  className="w-full px-4 py-3 bg-black border-2 border-[#95D7DE]/20 rounded-lg focus:border-[#95D7DE] focus:ring-2 focus:ring-[#95D7DE]/20 outline-none transition-all text-white placeholder-[#A0A0A0]"
                 />
               </motion.div>
             )}
@@ -239,7 +239,7 @@ const Page = () => {
             >
               <label
                 htmlFor="password"
-                className="block text-sm font-semibold text-black"
+                className="block text-sm font-semibold text-white"
               >
                 Password
               </label>
@@ -250,11 +250,11 @@ const Page = () => {
                 placeholder="Enter your password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-slate-300 rounded-lg focus:border-yellow-500/40 focus:ring-2 focus:ring-yellow-500/20 outline-none transition-all text-black placeholder-slate-400"
-                initial={{ borderColor: "#cbd5e1" }}
+                className="w-full px-4 py-3 bg-black border-2 border-[#95D7DE]/20 rounded-lg focus:border-[#95D7DE] focus:ring-2 focus:ring-[#95D7DE]/20 outline-none transition-all text-white placeholder-[#A0A0A0]"
+                initial={{ borderColor: "rgba(149, 215, 222, 0.2)" }}
                 whileFocus={{
-                  borderColor: "#fbbf24",
-                  boxShadow: "0 0 0 3px rgba(251, 191, 36, 0.1)",
+                  borderColor: "#95D7DE",
+                  boxShadow: "0 0 0 3px rgba(149, 215, 222, 0.15)",
                 }}
               />
             </motion.div>
@@ -268,7 +268,7 @@ const Page = () => {
             >
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-semibold text-black"
+                className="block text-sm font-semibold text-white"
               >
                 Confirm Password
               </label>
@@ -279,11 +279,11 @@ const Page = () => {
                 placeholder="Confirm your password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-slate-300 rounded-lg focus:border-yellow-500/40 focus:ring-2 focus:ring-yellow-500/20 outline-none transition-all text-black placeholder-slate-400"
-                initial={{ borderColor: "#cbd5e1" }}
+                className="w-full px-4 py-3 bg-black border-2 border-[#95D7DE]/20 rounded-lg focus:border-[#95D7DE] focus:ring-2 focus:ring-[#95D7DE]/20 outline-none transition-all text-white placeholder-[#A0A0A0]"
+                initial={{ borderColor: "rgba(149, 215, 222, 0.2)" }}
                 whileFocus={{
-                  borderColor: "#fbbf24",
-                  boxShadow: "0 0 0 3px rgba(251, 191, 36, 0.1)",
+                  borderColor: "#95D7DE",
+                  boxShadow: "0 0 0 3px rgba(149, 215, 222, 0.15)",
                 }}
               />
             </motion.div>
@@ -300,13 +300,13 @@ const Page = () => {
                 id="terms"
                 checked={isAgreed}
                 onChange={(e) => setIsAgreed(e.target.checked)}
-                className="w-5 h-5 rounded cursor-pointer accent-yellow-400"
+                className="w-5 h-5 rounded cursor-pointer accent-[#95D7DE]"
               />
-              <label htmlFor="terms" className="text-sm text-slate-700">
+              <label htmlFor="terms" className="text-sm text-[#A0A0A0]">
                 I agree to the{" "}
                 <a
                   href="#"
-                  className="text-yellow-500 hover:text-yellow-600 font-semibold"
+                  className="text-[#95D7DE] hover:text-[#7FC5CD] font-semibold"
                 >
                   Terms & Conditions
                 </a>
@@ -317,7 +317,7 @@ const Page = () => {
             <motion.button
               type="submit"
               disabled={!isAgreed}
-              className="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black font-bold py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-[#95D7DE] hover:bg-[#7FC5CD] text-black font-bold py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.8 }}
@@ -325,7 +325,7 @@ const Page = () => {
                 isAgreed
                   ? {
                       scale: 1.02,
-                      boxShadow: "0 20px 25px -5px rgba(251, 191, 36, 0.3)",
+                      boxShadow: "0 20px 25px -5px rgba(149, 215, 222, 0.3)",
                     }
                   : {}
               }
@@ -341,11 +341,11 @@ const Page = () => {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.85 }}
             >
-              <div className="flex-1 h-px bg-slate-300"></div>
-              <span className="text-sm text-slate-500">
+              <div className="flex-1 h-px bg-[#95D7DE]/20"></div>
+              <span className="text-sm text-[#A0A0A0]">
                 Already have an account?
               </span>
-              <div className="flex-1 h-px bg-slate-300"></div>
+              <div className="flex-1 h-px bg-[#95D7DE]/20"></div>
             </motion.div>
 
             {/* Login Link Button */}
@@ -357,7 +357,7 @@ const Page = () => {
               <Link href="/router/login" className="w-full block">
                 <motion.button
                   type="button"
-                  className="w-full border-2 border-black text-black font-bold py-3 rounded-lg hover:bg-black hover:text-yellow-400 transition-all duration-300"
+                  className="w-full border-2 border-[#95D7DE]/40 text-[#95D7DE] font-bold py-3 rounded-lg hover:bg-[#95D7DE] hover:text-black transition-all duration-300"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -369,12 +369,12 @@ const Page = () => {
 
           {/* Footer */}
           <motion.div
-            className="bg-slate-50 px-8 py-6 text-center border-t border-slate-200"
+            className="bg-black px-8 py-6 text-center border-t border-[#95D7DE]/10"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 1.0 }}
           >
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-[#A0A0A0]">
               We respect your privacy and security
             </p>
           </motion.div>

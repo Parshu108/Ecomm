@@ -8,9 +8,9 @@ export default function DashboardLayout({ children }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-black">
       {/* Sidebar */}
-      <div className="w-64 hidden md:block bg-white shadow-lg">
+      <div className="w-64 hidden md:block bg-[#001B38] border-r border-[#95D7DE]/10">
         <Sidebar />
       </div>
 

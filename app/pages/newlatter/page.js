@@ -47,21 +47,24 @@ const NewsletterSection = () => {
   };
 
   return (
-    <section className="bg-white py-20 px-6">
-      <div className="max-w-2xl mx-auto text-center">
+    <section className="relative bg-black py-24 px-6 border-t border-[#0A2647] overflow-hidden">
+      {/* Ambient glow — signature touch echoing the product-card "power on" glow */}
+      <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#95D7DE]/[0.06] blur-[100px] rounded-full" />
+
+      <div className="relative max-w-2xl mx-auto text-center">
         {/* Eyebrow */}
-        <span className="inline-flex items-center gap-2 bg-slate-100 border border-slate-200 text-slate-800 text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full mb-6">
-          <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse" />
+        <span className="inline-flex items-center gap-2 font-[family-name:var(--font-mono)] bg-[#001B38] border border-[#0A2647] text-[#95D7DE] text-xs font-medium tracking-[0.2em] uppercase px-4 py-1.5 rounded-full mb-6">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#95D7DE] animate-pulse" />
           Newsletter
         </span>
 
         {/* Headline */}
-        <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 leading-tight mb-4">
-          Deals straight to <span className="text-yellow-400">your inbox.</span>
+        <h2 className="font-[family-name:var(--font-display)] text-4xl sm:text-5xl font-bold text-[#EAF6F8] leading-tight mb-4 tracking-tight">
+          Deals straight to <span className="text-[#95D7DE]">your inbox.</span>
         </h2>
 
         {/* Subheading */}
-        <p className="text-slate-500 text-base sm:text-lg leading-relaxed mb-8 max-w-lg mx-auto">
+        <p className="text-[#5C7285] text-base sm:text-lg leading-relaxed mb-8 max-w-lg mx-auto">
           Join 40,000+ shoppers getting the best tech deals weekly. No spam —
           unsubscribe any time.
         </p>
@@ -71,7 +74,7 @@ const NewsletterSection = () => {
           {BENEFITS.map(({ icon, text }) => (
             <span
               key={text}
-              className="flex items-center gap-2 bg-slate-50 border border-slate-200 text-slate-600 text-sm px-4 py-2 rounded-full"
+              className="flex items-center gap-2 bg-[#001B38] border border-[#0A2647] text-[#A9C4D4] text-sm px-4 py-2 rounded-full"
             >
               <span>{icon}</span>
               {text}
@@ -82,16 +85,16 @@ const NewsletterSection = () => {
         {/* Form */}
         {status === "success" ? (
           <div className="flex flex-col items-center gap-3 py-6">
-            <div className="w-14 h-14 rounded-full bg-yellow-400/10 border border-yellow-400/40 flex items-center justify-center text-2xl text-yellow-500">
+            <div className="w-14 h-14 rounded-full bg-[#95D7DE]/10 border border-[#95D7DE]/40 flex items-center justify-center text-2xl text-[#95D7DE]">
               ✓
             </div>
-            <p className="text-slate-900 font-semibold text-lg">Youre in!</p>
-            <p className="text-slate-500 text-sm">
+            <p className="text-[#EAF6F8] font-semibold text-lg">You're in!</p>
+            <p className="text-[#5C7285] text-sm">
               Check your inbox for a welcome email.
             </p>
             <button
               onClick={() => setStatus("idle")}
-              className="mt-2 text-xs text-slate-400 hover:text-yellow-500 underline underline-offset-2 transition-colors"
+              className="mt-2 text-xs text-[#5C7285] hover:text-[#95D7DE] underline underline-offset-2 transition-colors"
             >
               Subscribe another email
             </button>
@@ -111,11 +114,11 @@ const NewsletterSection = () => {
                 aria-label="Email address"
                 aria-describedby={status === "error" ? "nl-error" : undefined}
                 disabled={status === "loading"}
-                className={`w-full bg-white border text-slate-900 text-sm placeholder-slate-400 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 transition-colors disabled:opacity-50
+                className={`w-full bg-[#001B38] border text-[#EAF6F8] text-sm placeholder-[#5C7285] rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 transition-colors disabled:opacity-50
                   ${
                     status === "error"
                       ? "border-red-400 focus:ring-red-400/30"
-                      : "border-slate-300 focus:ring-yellow-400/40 focus:border-yellow-400"
+                      : "border-[#0A2647] focus:ring-[#95D7DE]/40 focus:border-[#95D7DE]"
                   }`}
               />
               {status === "error" && (
@@ -131,7 +134,7 @@ const NewsletterSection = () => {
             <button
               type="submit"
               disabled={status === "loading"}
-              className="shrink-0 inline-flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-300 active:bg-yellow-500 text-slate-900 font-semibold text-sm px-6 py-3.5 rounded-xl transition-colors disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-yellow-400/50"
+              className="shrink-0 inline-flex items-center justify-center gap-2 bg-[#95D7DE] hover:bg-[#EAF6F8] active:bg-[#7CC5CD] text-black font-semibold text-sm px-6 py-3.5 rounded-xl transition-colors disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#95D7DE]/50"
             >
               {status === "loading" ? (
                 <>
@@ -180,15 +183,15 @@ const NewsletterSection = () => {
 
         {/* Privacy note */}
         {status !== "success" && (
-          <p className="mt-8 text-xs text-slate-400">
+          <p className="mt-8 text-xs text-[#5C7285]">
             By subscribing you agree to our{" "}
-            <Link href="#"
-              
-              className="hover:text-yellow-500 underline underline-offset-2 transition-colors"
+            <Link
+              href="#"
+              className="hover:text-[#95D7DE] underline underline-offset-2 transition-colors"
             >
               Privacy Policy
             </Link>
-             Unsubscribe at any time.
+            . Unsubscribe at any time.
           </p>
         )}
       </div>

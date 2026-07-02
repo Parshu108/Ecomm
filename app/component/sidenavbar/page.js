@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { LayoutDashboard, User, Settings, ShoppingBasket } from "lucide-react";
 
-
 export default function Sidebar() {
   const menu = [
     { name: "Dashboard", icon: LayoutDashboard, link: "/dashboard" },
@@ -14,8 +13,8 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 h-screen bg-white border-r shadow-sm hidden lg:block">
-      <div className="p-6 text-xl font-bold text-yellow-500 border-b">
+    <aside className="w-64 h-screen bg-[#001B38] border-r border-[#95D7DE]/10 hidden lg:block">
+      <div className="p-6 text-xl font-bold text-[#95D7DE] border-b border-[#95D7DE]/10">
         MyApp
       </div>
 
@@ -26,7 +25,7 @@ export default function Sidebar() {
             <Link
               key={i}
               href={item.link}
-              className="flex items-center gap-3 p-3 rounded-lg text-gray-600 hover:bg-yellow-50 hover:text-yellow-500 transition"
+              className="flex items-center gap-3 p-3 rounded-lg text-[#A0A0A0] hover:bg-black hover:text-[#95D7DE] transition"
             >
               <Icon size={18} />
               {item.name}

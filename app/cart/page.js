@@ -19,10 +19,10 @@ const CartPages = () => {
 
   if (!cart || cart.length === 0) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center text-center bg-gray-50 px-4">
-        <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-6">
+      <div className="min-h-screen flex flex-col items-center justify-center text-center bg-black px-4">
+        <div className="w-20 h-20 rounded-full bg-[#001B38] border border-[#95D7DE]/20 flex items-center justify-center mb-6">
           <svg
-            className="w-10 h-10 text-gray-400"
+            className="w-10 h-10 text-[#95D7DE]"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -35,15 +35,15 @@ const CartPages = () => {
             />
           </svg>
         </div>
-        <h1 className="text-2xl font-semibold text-gray-800 mb-2">
+        <h1 className="text-2xl font-semibold text-white mb-2">
           Your cart is empty
         </h1>
-        <p className="text-gray-500 text-sm mb-8">
+        <p className="text-[#A0A0A0] text-sm mb-8">
           Looks like you haven,t added anything yet.
         </p>
         <Link
           href="../shop"
-          className="bg-gray-900 text-white px-8 py-3 rounded-xl text-sm font-medium hover:bg-gray-700 transition-colors"
+          className="bg-[#95D7DE] text-black px-8 py-3 rounded-xl text-sm font-medium hover:bg-[#7FC5CD] transition-colors"
         >
           Continue shopping
         </Link>
@@ -52,15 +52,13 @@ const CartPages = () => {
   }
 
   return (
-    <div className="bg-gray-100 min-h-screen py-10">
+    <div className="bg-black min-h-screen py-10">
       <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-3 gap-8">
         {/* LEFT — CART ITEMS */}
         <div className="lg:col-span-2 space-y-5">
           <div className="flex items-center gap-3 mb-6">
-            <h1 className="text-2xl font-semibold text-gray-900">
-              Shopping cart
-            </h1>
-            <span className="text-xs text-gray-500 bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-full">
+            <h1 className="text-2xl font-semibold text-white">Shopping cart</h1>
+            <span className="text-xs text-[#95D7DE] bg-[#001B38] border border-[#95D7DE]/20 px-2.5 py-1 rounded-full">
               {cart.length} {cart.length === 1 ? "item" : "items"}
             </span>
           </div>
@@ -68,10 +66,10 @@ const CartPages = () => {
           {cart.map((product) => (
             <div
               key={product._id}
-              className="bg-white border w-180 border-gray-200 rounded-2xl p-10 flex gap-4 items-start hover:bg-gray-200 hover:border-gray-200 transition-colors"
+              className="bg-[#001B38] w-180 border border-[#95D7DE]/10 rounded-2xl p-10 flex gap-4 items-start hover:border-[#95D7DE]/30 transition-colors"
             >
               {/* IMAGE */}
-              <div className="w-20 h-20 min-w-[100px] bg-gray-50 border border-gray-100 rounded-xl flex items-center justify-center overflow-hidden">
+              <div className="w-20 h-20 min-w-[100px] bg-black border border-[#95D7DE]/10 rounded-xl flex items-center justify-center overflow-hidden">
                 <Image
                   src={product.image || "/fallback.png"}
                   alt={product.name}
@@ -84,10 +82,10 @@ const CartPages = () => {
 
               {/* DETAILS */}
               <div className="flex-1 min-w-0">
-                <h2 className="text-sm font-medium text-gray-900 truncate">
+                <h2 className="text-sm font-medium text-white truncate">
                   {product.title}
                 </h2>
-                <p className="text-xs text-gray-600 mt-0.5 mb-3">
+                <p className="text-xs text-[#A0A0A0] mt-0.5 mb-3">
                   ₹{product.price} per item
                 </p>
 
@@ -95,16 +93,16 @@ const CartPages = () => {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => decreaseQty?.(product._id)}
-                    className="w-7 h-7 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 flex items-center justify-center text-base leading-none transition-colors"
+                    className="w-7 h-7 rounded-lg border border-[#95D7DE]/20 text-[#95D7DE] hover:bg-black flex items-center justify-center text-base leading-none transition-colors"
                   >
                     −
                   </button>
-                  <span className="text-sm font-medium text-gray-800 w-5 text-center">
+                  <span className="text-sm font-medium text-white w-5 text-center">
                     {product.qty || 1}
                   </span>
                   <button
                     onClick={() => increaseQty?.(product._id)}
-                    className="w-7 h-7 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 flex items-center justify-center text-base leading-none transition-colors"
+                    className="w-7 h-7 rounded-lg border border-[#95D7DE]/20 text-[#95D7DE] hover:bg-black flex items-center justify-center text-base leading-none transition-colors"
                   >
                     +
                   </button>
@@ -114,7 +112,7 @@ const CartPages = () => {
               {/* PRICE + REMOVE */}
               <div className="flex flex-col items-end gap-2">
                 <button
-                  className="text-gray-300 hover:text-red-400 transition-colors"
+                  className="text-[#A0A0A0] hover:text-red-400 transition-colors"
                   aria-label="Remove item"
                 >
                   <svg
@@ -131,7 +129,7 @@ const CartPages = () => {
                     />
                   </svg>
                 </button>
-                <span className="text-sm font-semibold text-gray-900">
+                <span className="text-sm font-semibold text-white">
                   ₹{product.price * (product.qty || 1)}
                 </span>
               </div>
@@ -140,36 +138,32 @@ const CartPages = () => {
         </div>
 
         {/* RIGHT — ORDER SUMMARY */}
-        <div className="bg-white border border-gray-100 rounded-2xl p-6 h-fit sticky top-20 space-y-4">
-          <h2 className="text-base font-semibold text-gray-900">
-            Order summary
-          </h2>
+        <div className="bg-[#001B38] border border-[#95D7DE]/10 rounded-2xl p-6 h-fit sticky top-20 space-y-4">
+          <h2 className="text-base font-semibold text-white">Order summary</h2>
 
           <div className="space-y-3 text-sm">
-            <div className="flex justify-between text-gray-500">
+            <div className="flex justify-between text-[#A0A0A0]">
               <span>Items</span>
-              <span className="text-gray-800">{cart.length}</span>
+              <span className="text-white">{cart.length}</span>
             </div>
-            <div className="flex justify-between text-gray-500">
+            <div className="flex justify-between text-[#A0A0A0]">
               <span>Subtotal</span>
-              <span className="text-gray-800">₹{total}</span>
+              <span className="text-white">₹{total}</span>
             </div>
-            <div className="flex justify-between text-gray-500">
+            <div className="flex justify-between text-[#A0A0A0]">
               <span>Delivery</span>
-              <span className="text-green-600 font-medium">Free</span>
+              <span className="text-[#95D7DE] font-medium">Free</span>
             </div>
           </div>
 
-          <div className="border-t border-gray-100 pt-4 flex justify-between items-center">
-            <span className="text-sm font-semibold text-gray-900">Total</span>
-            <span className="text-lg font-semibold text-gray-900">
-              ₹{total}
-            </span>
+          <div className="border-t border-[#95D7DE]/10 pt-4 flex justify-between items-center">
+            <span className="text-sm font-semibold text-white">Total</span>
+            <span className="text-lg font-semibold text-white">₹{total}</span>
           </div>
 
           <Link
             href="../checkout"
-            className="flex items-center justify-center gap-2 w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl text-sm font-medium transition-colors"
+            className="flex items-center justify-center gap-2 w-full bg-[#95D7DE] hover:bg-[#7FC5CD] text-black py-3 rounded-xl text-sm font-semibold transition-colors"
           >
             <svg
               className="w-4 h-4"
@@ -189,19 +183,19 @@ const CartPages = () => {
 
           <button
             onClick={clearCart}
-            className="w-full border border-red-200 text-red-500 hover:bg-red-50 py-2.5 rounded-xl text-sm font-medium transition-colors"
+            className="w-full border border-red-400/30 text-red-400 hover:bg-red-400/10 py-2.5 rounded-xl text-sm font-medium transition-colors"
           >
             Clear cart
           </button>
 
           <Link
             href="../shop"
-            className="flex items-center justify-center gap-1.5 w-full border border-gray-200 text-gray-500 hover:bg-gray-50 py-2.5 rounded-xl text-sm transition-colors"
+            className="flex items-center justify-center gap-1.5 w-full border border-[#95D7DE]/20 text-[#A0A0A0] hover:bg-black hover:text-white py-2.5 rounded-xl text-sm transition-colors"
           >
             ← Continue shopping
           </Link>
 
-          <p className="text-xs text-green-600 text-center flex items-center justify-center gap-1.5">
+          <p className="text-xs text-[#95D7DE] text-center flex items-center justify-center gap-1.5">
             <svg
               className="w-3.5 h-3.5"
               fill="none"

@@ -7,11 +7,23 @@ import { useProductcontext } from "../context/productcontext";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 
+const CATEGORIES = [
+  { label: "All", value: "All" },
+  { label: "Mobiles", value: "mobile" },
+  { label: "Headphone", value: "headphone" },
+  { label: "Watch", value: "watch" },
+  { label: "Gaming", value: "remote" },
+];
+
+const PRICE_TIERS = [1000, 10000, 40000];
+
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filtered, setFiltered] = useState([]);
   const [input, setInput] = useState([]);
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [activePrice, setActivePrice] = useState(null);
 
   const { addTocart, getCartdata } = useProductcontext();
 
@@ -19,8 +31,8 @@ export default function ProductsPage() {
     async function getPost() {
       try {
         const res = await fetch("/api/electroproduct");
-        
-        const data = await res.json(); 
+
+        const data = await res.json();
 
         setProducts(data); // ✅ FIXED
         setFiltered(data);
@@ -35,6 +47,7 @@ export default function ProductsPage() {
   }, []);
 
   const filterbycategory = (category) => {
+    setActiveCategory(category);
     if (category === "All") {
       setFiltered(products);
     } else {
@@ -44,6 +57,7 @@ export default function ProductsPage() {
   };
 
   const filterbyprice = (price) => {
+    setActivePrice(price);
     const data = products.filter((item) => item.price >= price);
     setFiltered(data);
   };
@@ -57,15 +71,28 @@ export default function ProductsPage() {
 
   // ✅ Loading state
   if (loading) {
-    return <p className="text-center mt-10">Loading products...</p>;
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <p className="text-center text-[#5C7285] font-[family-name:var(--font-mono)] text-sm tracking-widest uppercase">
+          Loading products...
+        </p>
+      </div>
+    );
   }
 
   return (
     <>
-      <div className="w-full bg-gray-800 py-2 px-3 flex items-center gap-2">
+      {/*
+        Fonts — add once in app/layout.js:
+        import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+        const display = Space_Grotesk({ subsets: ["latin"], variable: "--font-display" });
+        const body = Inter({ subsets: ["latin"], variable: "--font-body" });
+        const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
+      */}
+
+      <div className="w-full bg-[#001B38] py-3 px-4 border-b border-[#0A2647]">
         {/* Search Bar */}
-        <div className="flex flex-1 h-12 w-50 rounded-md overflow-hidden">
-          {/* Input */}
+        <div className="flex flex-1 h-12 max-w-xl rounded-lg overflow-hidden border border-[#0A2647]">
           <input
             type="text"
             placeholder="Search here"
@@ -74,12 +101,11 @@ export default function ProductsPage() {
               setInput(e.target.value);
               filterbyname(e.target.value);
             }}
-            className="flex-1 px-4 text-sm text-[#131921] placeholder-[#767676] bg-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#febd69]"
+            className="flex-1 px-4 text-sm text-[#EAF6F8] placeholder-[#5C7285] bg-black focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#95D7DE]"
           />
 
-          {/* Search Button */}
           <button
-            className="bg-[#febd69] hover:bg-[#f3a847] active:bg-[#e8991c] w-12 flex items-center justify-center transition-colors duration-150"
+            className="bg-[#95D7DE] hover:bg-[#EAF6F8] active:bg-[#7CC5CD] w-12 flex items-center justify-center transition-colors duration-150"
             aria-label="Search"
             onClick={() => filterbyname(input)}
           >
@@ -89,7 +115,7 @@ export default function ProductsPage() {
               height="20"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#131921"
+              stroke="#000000"
               strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -114,99 +140,81 @@ export default function ProductsPage() {
         theme="dark"
         transition={Bounce}
       />
-      <div className="min-h-screen bg-gray-100 px-6 py-10">
-        {/* 🔥 Header */}
-        <h1 className=" text-center text-3xl font-bold text-gray-800 mb-8">
-          🛒 Product Store
-        </h1>
+      <div className="min-h-screen bg-black px-6 py-10">
+        {/* Header */}
+        <div className="text-center mb-10">
+          <span className="font-[family-name:var(--font-mono)] text-xs tracking-[0.25em] uppercase text-[#5C7285]">
+            Full Catalog
+          </span>
+          <h1 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-bold text-[#EAF6F8] mt-2">
+            Product Store
+          </h1>
+        </div>
 
-        <div className="max-w-6xl mx-auto px-2">
-          <div className="bg-gray-700 text-white rounded-2xl shadow-md my-6 p-5">
+        <div className="max-w-7xl mx-auto px-2">
+          <div className="bg-[#001B38] text-[#EAF6F8] rounded-2xl border border-[#0A2647] my-6 p-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* CATEGORY FILTER */}
               <div className="flex flex-wrap items-center gap-3">
-                <span className="font-semibold text-lg">Category:</span>
+                <span className="font-[family-name:var(--font-mono)] text-xs tracking-widest uppercase text-[#5C7285]">
+                  Category
+                </span>
 
-                <button
-                  onClick={() => setFiltered(products)}
-                  className="px-4 py-2 text-sm border border-yellow-400 rounded-full hover:bg-yellow-600 hover:text-black transition"
-                >
-                  All
-                </button>
-
-                <button
-                  onClick={() => filterbycategory("mobile")}
-                  className="px-4 py-2 text-sm border border-yellow-400 rounded-full hover:bg-yellow-600 hover:text-black transition"
-                >
-                  Mobiles
-                </button>
-
-                <button
-                  onClick={() => filterbycategory("headphone")}
-                  className="px-4 py-2 text-sm border border-yellow-400 rounded-full hover:bg-yellow-600 hover:text-black transition"
-                >
-                  Headphone
-                </button>
-
-                <button
-                  onClick={() => filterbycategory("watch")}
-                  className="px-4 py-2 text-sm border border-yellow-400 rounded-full hover:bg-yellow-600 hover:text-black transition"
-                >
-                  Watch
-                </button>
-
-                <button
-                  onClick={() => filterbycategory("remote")}
-                  className="px-4 py-2 text-sm border border-yellow-400 rounded-full hover:bg-yellow-600 hover:text-black transition"
-                >
-                  Gaming
-                </button>
+                {CATEGORIES.map(({ label, value }) => (
+                  <button
+                    key={value}
+                    onClick={() => filterbycategory(value)}
+                    className={`px-4 py-2 text-sm rounded-full border transition ${
+                      activeCategory === value
+                        ? "bg-[#95D7DE] text-black border-[#95D7DE] font-medium"
+                        : "border-[#0A2647] text-[#A9C4D4] hover:border-[#95D7DE] hover:text-[#95D7DE]"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
               </div>
-              {/* price filter */}
-              <div className="flex flex-wrap items-center gap-3 ">
-                <span className="font-semibold text-lg">Price:</span>
 
-                <button
-                  onClick={() => filterbyprice(1000)}
-                  className="px-4 py-2 text-sm border border-yellow-400 text-yellow-400 rounded-full hover:bg-yellow-400 hover:text-black transition"
-                >
-                  ≥ ₹1,000
-                </button>
+              {/* PRICE FILTER */}
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="font-[family-name:var(--font-mono)] text-xs tracking-widest uppercase text-[#5C7285]">
+                  Price
+                </span>
 
-                <button
-                  onClick={() => filterbyprice(10000)}
-                  className="px-4 py-2 text-sm border border-yellow-400 text-yellow-400 rounded-full hover:bg-yellow-400 hover:text-black transition"
-                >
-                  ≥ ₹10,000
-                </button>
-
-                <button
-                  onClick={() => filterbyprice(40000)}
-                  className="px-4 py-2 text-sm border border-yellow-400 text-yellow-400 rounded-full hover:bg-yellow-400 hover:text-black transition"
-                >
-                  ≥ ₹40,000
-                </button>
+                {PRICE_TIERS.map((price) => (
+                  <button
+                    key={price}
+                    onClick={() => filterbyprice(price)}
+                    className={`px-4 py-2 text-sm rounded-full border font-[family-name:var(--font-mono)] transition ${
+                      activePrice === price
+                        ? "bg-[#95D7DE] text-black border-[#95D7DE] font-medium"
+                        : "border-[#0A2647] text-[#95D7DE] hover:bg-[#95D7DE] hover:text-black"
+                    }`}
+                  >
+                    ≥ ₹{price.toLocaleString("en-IN")}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
         </div>
 
-        {/* 🔥 Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {/* Grid */}
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {Array.isArray(filtered) &&
             filtered.map((product) => (
               <div
                 key={product._id}
-                className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition duration-300 flex flex-col"
+                className="group bg-[#001B38] rounded-2xl p-4 border border-[#0A2647] transition-all duration-300 hover:border-[#95D7DE] hover:shadow-[0_0_24px_-4px_rgba(149,215,222,0.35)] flex flex-col"
               >
                 {/* IMAGE */}
-                <div className="bg-gray-50 rounded-lg p-4 flex justify-center items-center h-[200px]">
+                <div className="bg-black rounded-lg p-4 flex justify-center items-center h-[200px] overflow-hidden">
                   <Image
                     src={product.image || "/fallback.png"}
                     alt={product.name}
                     width={200}
                     height={200}
-                    className="object-contain hover:scale-105 transition duration-300"
+                    className="object-contain transition-transform duration-500 group-hover:scale-[1.05]"
                     unoptimized
                     loading="eager"
                   />
@@ -215,34 +223,34 @@ export default function ProductsPage() {
                 {/* CONTENT */}
                 <div className="mt-4 flex flex-col flex-grow">
                   {/* TITLE */}
-                  <h2 className="text-sm font-semibold text-gray-800 line-clamp-2 hover:text-blue-600 cursor-pointer">
+                  <h2 className="text-sm font-semibold text-[#EAF6F8] line-clamp-2 hover:text-[#95D7DE] cursor-pointer transition-colors">
                     {product.name}
                   </h2>
 
                   {/* RATING */}
                   <div className="flex items-center mt-1 text-sm">
-                    <span className="text-yellow-500">⭐⭐⭐⭐☆</span>
-                    <span className="text-gray-500 ml-2">(120)</span>
+                    <span className="text-[#95D7DE]">⭐⭐⭐⭐☆</span>
+                    <span className="text-[#5C7285] ml-2">(120)</span>
                   </div>
 
                   {/* DESCRIPTION */}
-                  <p className="text-gray-500 text-xs mt-2 line-clamp-2">
+                  <p className="text-[#5C7285] text-xs mt-2 line-clamp-2">
                     {product.description?.substring(0, 80)}...
                   </p>
 
                   {/* PRICE */}
-                  <div className="mt-3">
-                    <span className="text-lg font-bold text-gray-900">
+                  <div className="mt-3 font-[family-name:var(--font-mono)]">
+                    <span className="text-lg font-bold text-[#95D7DE]">
                       ₹{product.price}
                     </span>
-                    <span className="text-sm text-gray-400 line-through ml-2">
+                    <span className="text-sm text-[#5C7285] line-through ml-2">
                       ₹{(product.price * 1.2).toFixed(0)}
                     </span>
                   </div>
 
                   {/* BUTTON */}
                   <button
-                    className="mt-auto bg-yellow-400 hover:bg-yellow-500 text-black text-sm font-medium py-2 rounded-md mt-4 transition"
+                    className="mt-auto bg-[#95D7DE] hover:bg-[#EAF6F8] text-black text-sm font-medium py-2 rounded-md mt-4 transition"
                     onClick={() => {
                       (addTocart(product.name, product.image, product.price),
                         getCartdata());
@@ -253,9 +261,9 @@ export default function ProductsPage() {
 
                   <Link
                     href={`/${product._id}`}
-                    className="w-full text-center border border-gray-300 py-2 mt-2 rounded-lg text-sm hover:bg-gray-100 transition"
+                    className="w-full text-center border border-[#0A2647] py-2 mt-2 rounded-lg text-sm text-[#A9C4D4] hover:border-[#95D7DE] hover:text-[#95D7DE] transition"
                   >
-                    view
+                    View
                   </Link>
                 </div>
               </div>

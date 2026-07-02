@@ -3,10 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-// 60% = white/gray-50  → page bg, card bg, surfaces
-// 30% = slate-800/900  → titles, meta text, read-more button
-// 10% = yellow-400     → badge, hover accent, button text
-
 const blogs = [
   {
     id: 1,
@@ -54,20 +50,20 @@ const blogs = [
 
 export default function BlogPage() {
   return (
-    <section className="bg-gray-50 min-h-screen py-16">
-      <div className="max-w-6xl mx-auto px-6">
+    <section className="bg-[#000000] min-h-screen py-16">
+      <div className="max-w-7xl mx-auto px-6">
         {/* HEADING */}
         <div className="text-center mb-14">
-          {/* 10% accent — yellow on dark pill */}
-          <span className="inline-block bg-slate-800 text-yellow-400 text-xs font-medium px-4 py-1.5 rounded-full tracking-widest uppercase mb-4">
+          {/* accent pill */}
+          <span className="inline-block bg-[#001B38] text-[#95D7DE] text-xs font-medium px-4 py-1.5 rounded-full tracking-widest uppercase mb-4">
             Latest posts
           </span>
-          {/* 30% dark — main heading */}
-          <h1 className="text-4xl md:text-5xl font-semibold text-slate-900 mb-3">
+          {/* main heading */}
+          <h1 className="text-4xl md:text-5xl font-semibold text-[#FFFFFF] mb-3">
             Our Blogs
           </h1>
-          {/* 60% surface text — muted */}
-          <p className="text-slate-500 text-sm">
+          {/* muted subtext */}
+          <p className="text-[#A0A0A0] text-sm">
             Latest insights, tutorials &amp; industry updates
           </p>
         </div>
@@ -77,44 +73,45 @@ export default function BlogPage() {
           {blogs.map((blog, index) => (
             <article
               key={blog.id}
-              className="bg-white border border-slate-100 rounded-2xl overflow-hidden group hover:border-yellow-400 transition-all duration-300"
+              className="bg-[#001B38] border border-[#A0A0A0]/10 rounded-2xl overflow-hidden group hover:border-[#95D7DE] transition-all duration-300"
             >
               {/* IMAGE */}
-              <div className="relative w-full h-52 overflow-hidden bg-slate-50">
+              <div className="relative w-full h-52 overflow-hidden bg-[#000000]">
                 <Image
                   src={blog.image}
                   alt={blog.title || "Blog image"}
                   fill
+                  unoptimized
                   className="object-cover group-hover:scale-105 transition duration-500"
                   priority={index === 0}
                 />
-                {/* 10% yellow badge */}
-                <span className="absolute top-3 left-3 bg-yellow-400 text-slate-900 text-[11px] font-semibold px-3 py-1 rounded-full">
+                {/* accent badge */}
+                <span className="absolute top-3 left-3 bg-[#95D7DE] text-[#000000] text-[11px] font-semibold px-3 py-1 rounded-full">
                   Blog
                 </span>
               </div>
 
               {/* CONTENT */}
               <div className="p-5">
-                {/* 30% dark title, yellow on hover */}
-                <h2 className="text-sm font-semibold text-slate-800 line-clamp-2 leading-snug mb-3 group-hover:text-yellow-600 transition-colors">
+                {/* title, accent on hover */}
+                <h2 className="text-sm font-semibold text-[#FFFFFF] line-clamp-2 leading-snug mb-3 group-hover:text-[#95D7DE] transition-colors">
                   {blog.title}
                 </h2>
 
-                <p className="text-xs text-slate-500 line-clamp-3 leading-relaxed mb-4">
+                <p className="text-xs text-[#A0A0A0] line-clamp-3 leading-relaxed mb-4">
                   {blog.desc}
                 </p>
 
                 {/* META */}
-                <div className="flex justify-between items-center py-3 border-y border-slate-50 mb-4">
+                <div className="flex justify-between items-center py-3 border-y border-[#A0A0A0]/10 mb-4">
                   <div className="flex items-center gap-2">
-                    {/* 30% dark avatar circle */}
-                    <div className="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-yellow-400 text-[10px] font-semibold">
+                    {/* avatar circle */}
+                    <div className="w-6 h-6 rounded-full bg-[#000000] flex items-center justify-center text-[#95D7DE] text-[10px] font-semibold">
                       A
                     </div>
-                    <span className="text-xs text-slate-500">By Admin</span>
+                    <span className="text-xs text-[#A0A0A0]">By Admin</span>
                   </div>
-                  <span className="flex items-center gap-1 text-xs text-slate-400">
+                  <span className="flex items-center gap-1 text-xs text-[#A0A0A0]">
                     <svg
                       className="w-3.5 h-3.5"
                       fill="none"
@@ -132,10 +129,10 @@ export default function BlogPage() {
                   </span>
                 </div>
 
-                {/* 30% dark button with 10% yellow text */}
+                {/* button */}
                 <Link
                   href={`/blog/${blog.id}`}
-                  className="flex items-center justify-center gap-1.5 w-full bg-slate-800 hover:bg-slate-900 text-yellow-400 py-2.5 rounded-xl text-xs font-medium transition-colors"
+                  className="flex items-center justify-center gap-1.5 w-full bg-[#000000] hover:bg-[#000000]/70 text-[#95D7DE] py-2.5 rounded-xl text-xs font-medium transition-colors"
                 >
                   Read more
                   <svg

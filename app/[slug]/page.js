@@ -56,10 +56,10 @@ const Page = () => {
   // ── Loading state ──────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-[#000000]">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-9 h-9 border-2 border-slate-200 border-t-yellow-400 rounded-full animate-spin" />
-          <p className="text-sm text-slate-400">Loading product...</p>
+          <div className="w-9 h-9 border-2 border-[#001B38] border-t-[#95D7DE] rounded-full animate-spin" />
+          <p className="text-sm text-[#A0A0A0]">Loading product...</p>
         </div>
       </div>
     );
@@ -68,16 +68,16 @@ const Page = () => {
   // ── Not found state ────────────────────────────────────────────────────────
   if (notFound) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-[#000000]">
         <div className="flex flex-col items-center gap-3 text-center">
           <p className="text-2xl">😕</p>
-          <p className="text-slate-700 font-medium">Product not found</p>
-          <p className="text-sm text-slate-400">
-            The product you're looking for doesn't exist or was removed.
+          <p className="text-[#FFFFFF] font-medium">Product not found</p>
+          <p className="text-sm text-[#A0A0A0]">
+            The product youre looking for doesnt exist or was removed.
           </p>
           <Link
             href="/shop"
-            className="mt-2 text-sm font-medium text-yellow-500 hover:underline"
+            className="mt-2 text-sm font-medium text-[#95D7DE] hover:underline"
           >
             Back to shop →
           </Link>
@@ -101,19 +101,19 @@ const Page = () => {
   );
 
   return (
-    <div className="bg-gray-50 min-h-screen py-10">
+    <div className="bg-[#000000] min-h-screen py-10">
       <div className="max-w-6xl mx-auto px-6">
         {/* BREADCRUMB */}
-        <nav className="text-xs text-slate-400 mb-8 flex items-center gap-1.5">
-          <Link href="/" className="hover:text-slate-700 transition-colors">
+        <nav className="text-xs text-[#A0A0A0] mb-8 flex items-center gap-1.5">
+          <Link href="/" className="hover:text-[#95D7DE] transition-colors">
             Home
           </Link>
           <span>/</span>
-          <Link href="/shop" className="hover:text-slate-700 transition-colors">
+          <Link href="/shop" className="hover:text-[#95D7DE] transition-colors">
             Shop
           </Link>
           <span>/</span>
-          <span className="text-slate-700 truncate max-w-[200px]">
+          <span className="text-[#FFFFFF] truncate max-w-[200px]">
             {product.name}
           </span>
         </nav>
@@ -122,7 +122,7 @@ const Page = () => {
         <div className="grid md:grid-cols-2 gap-10 mb-16">
           {/* LEFT — IMAGES */}
           <div>
-            <div className="bg-white border border-slate-100 rounded-2xl p-8 flex items-center justify-center min-h-[340px]">
+            <div className="bg-[#001B38] rounded-2xl p-8 flex items-center justify-center min-h-[340px]">
               <Image
                 src={selectedImage || FALLBACK_IMAGE}
                 alt={product.name}
@@ -138,11 +138,11 @@ const Page = () => {
                 <button
                   key={i}
                   onClick={() => setSelectedImage(img || FALLBACK_IMAGE)}
-                  className={`w-[68px] h-[68px] rounded-xl border bg-white flex items-center justify-center overflow-hidden transition-all
+                  className={`w-[68px] h-[68px] rounded-xl border bg-[#001B38] flex items-center justify-center overflow-hidden transition-all
                     ${
                       selectedImage === img
-                        ? "border-yellow-400 ring-2 ring-yellow-400 ring-offset-1"
-                        : "border-slate-100 hover:border-slate-300"
+                        ? "border-[#95D7DE] ring-2 ring-[#95D7DE] ring-offset-1 ring-offset-[#000000]"
+                        : "border-[#001B38] hover:border-[#A0A0A0]"
                     }`}
                 >
                   <Image
@@ -160,54 +160,54 @@ const Page = () => {
 
           {/* RIGHT — DETAILS */}
           <div className="space-y-4">
-            <span className="inline-flex items-center gap-1.5 bg-slate-800 text-yellow-400 text-xs font-medium px-3 py-1 rounded-full">
+            <span className="inline-flex items-center gap-1.5 bg-[#001B38] text-[#95D7DE] text-xs font-medium px-3 py-1 rounded-full">
               ✓ In stock
             </span>
 
-            <h1 className="text-2xl font-semibold text-slate-900 leading-snug">
+            <h1 className="text-2xl font-semibold text-[#FFFFFF] leading-snug">
               {product.name}
             </h1>
 
             {/* Stars */}
-            <div className="flex items-center gap-1 text-yellow-400 text-sm">
+            <div className="flex items-center gap-1 text-[#95D7DE] text-sm">
               {"★★★★★".split("").map((s, i) => (
                 <span key={i}>{s}</span>
               ))}
-              <span className="text-slate-400 text-xs ml-1.5">
+              <span className="text-[#A0A0A0] text-xs ml-1.5">
                 {product.rating ?? "4.5"} · {product.reviewCount ?? 128} reviews
               </span>
             </div>
 
             {/* Price */}
             <div className="flex items-baseline gap-3">
-              <span className="text-3xl font-semibold text-slate-900">
+              <span className="text-3xl font-semibold text-[#FFFFFF]">
                 ₹{product.price}
               </span>
-              <span className="text-sm text-slate-400 line-through">
+              <span className="text-sm text-[#A0A0A0] line-through">
                 ₹{originalPrice}
               </span>
-              <span className="text-xs font-semibold bg-yellow-400 text-slate-900 px-2.5 py-0.5 rounded-full">
+              <span className="text-xs font-semibold bg-[#95D7DE] text-[#000000] px-2.5 py-0.5 rounded-full">
                 {discountPercent}% off
               </span>
             </div>
 
-            <hr className="border-slate-100" />
+            <hr className="border-[#001B38]" />
 
-            <p className="text-sm text-slate-500 leading-relaxed">
+            <p className="text-sm text-[#A0A0A0] leading-relaxed">
               {product.description || "No description available."}
             </p>
 
-            <hr className="border-slate-100" />
+            <hr className="border-[#001B38]" />
 
             {/* Quantity */}
             <div>
-              <p className="text-xs uppercase tracking-widest text-slate-400 mb-2">
+              <p className="text-xs uppercase tracking-widest text-[#A0A0A0] mb-2">
                 Quantity
               </p>
-              <div className="flex items-center border border-slate-200 rounded-xl w-fit overflow-hidden mb-5">
+              <div className="flex items-center border border-[#001B38] rounded-xl w-fit overflow-hidden mb-5">
                 <button
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="w-10 h-10 bg-slate-50 hover:bg-slate-100 text-slate-800 text-lg flex items-center justify-center transition-colors"
+                  className="w-10 h-10 bg-[#001B38] hover:bg-[#001B38]/70 text-[#FFFFFF] text-lg flex items-center justify-center transition-colors"
                 >
                   −
                 </button>
@@ -219,11 +219,11 @@ const Page = () => {
                     const val = parseInt(e.target.value);
                     if (!isNaN(val) && val >= 1) setQuantity(val);
                   }}
-                  className="w-12 h-10 text-center text-sm font-medium text-slate-900 bg-white border-x border-slate-200 focus:outline-none"
+                  className="w-12 h-10 text-center text-sm font-medium text-[#FFFFFF] bg-[#000000] border-x border-[#001B38] focus:outline-none"
                 />
                 <button
                   onClick={() => setQuantity((q) => q + 1)}
-                  className="w-10 h-10 bg-slate-50 hover:bg-slate-100 text-slate-800 text-lg flex items-center justify-center transition-colors"
+                  className="w-10 h-10 bg-[#001B38] hover:bg-[#001B38]/70 text-[#FFFFFF] text-lg flex items-center justify-center transition-colors"
                 >
                   +
                 </button>
@@ -232,11 +232,11 @@ const Page = () => {
               <div className="flex gap-3">
                 <button
                   onClick={() => addTocart(product._id, quantity)}
-                  className="flex-1 flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-900 text-yellow-400 py-3 rounded-xl text-sm font-medium transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 bg-[#001B38] hover:bg-[#001B38]/70 text-[#95D7DE] py-3 rounded-xl text-sm font-medium transition-colors"
                 >
                   🛒 Add to cart
                 </button>
-                <button className="flex-1 flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-slate-900 py-3 rounded-xl text-sm font-semibold transition-colors">
+                <button className="flex-1 flex items-center justify-center gap-2 bg-[#95D7DE] hover:opacity-90 text-[#000000] py-3 rounded-xl text-sm font-semibold transition-colors">
                   ⚡ Buy now
                 </button>
               </div>
@@ -251,7 +251,7 @@ const Page = () => {
               ].map(({ icon, text }) => (
                 <span
                   key={text}
-                  className="flex items-center gap-1.5 text-xs text-slate-400"
+                  className="flex items-center gap-1.5 text-xs text-[#A0A0A0]"
                 >
                   {icon} {text}
                 </span>
@@ -263,20 +263,20 @@ const Page = () => {
         {/* RELATED PRODUCTS */}
         <div>
           <div className="flex items-center gap-4 mb-6">
-            <h2 className="text-base font-semibold text-slate-800 whitespace-nowrap">
+            <h2 className="text-base font-semibold text-[#FFFFFF] whitespace-nowrap">
               Related products
             </h2>
-            <div className="flex-1 h-px bg-slate-100" />
+            <div className="flex-1 h-px bg-[#001B38]" />
           </div>
 
           {relatedProducts.length === 0 ? (
-            <p className="text-sm text-slate-400">No related products found.</p>
+            <p className="text-sm text-[#A0A0A0]">No related products found.</p>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {relatedProducts.map((item) => (
                 <Link key={String(item._id)} href={`/product/${item._id}`}>
-                  <div className="bg-white border border-slate-100 rounded-2xl overflow-hidden group hover:border-yellow-400 transition-colors cursor-pointer">
-                    <div className="bg-gray-50 p-4 flex items-center justify-center h-[200px]">
+                  <div className="bg-[#001B38] rounded-2xl overflow-hidden group hover:ring-1 hover:ring-[#95D7DE] transition-all cursor-pointer">
+                    <div className="bg-[#000000] p-4 flex items-center justify-center h-[200px]">
                       <Image
                         src={item.image || FALLBACK_IMAGE}
                         alt={item.name}
@@ -287,10 +287,10 @@ const Page = () => {
                       />
                     </div>
                     <div className="p-3">
-                      <h3 className="text-xs font-medium text-slate-800 truncate mb-0.5">
+                      <h3 className="text-xs font-medium text-[#FFFFFF] truncate mb-0.5">
                         {item.name}
                       </h3>
-                      <p className="text-sm font-semibold text-slate-900 mb-3">
+                      <p className="text-sm font-semibold text-[#95D7DE] mb-3">
                         ₹{item.price}
                       </p>
                       <div className="flex gap-2">
@@ -299,13 +299,13 @@ const Page = () => {
                             e.preventDefault();
                             addTocart(item._id, 1);
                           }}
-                          className="flex-1 bg-slate-800 hover:bg-slate-900 text-yellow-400 text-xs font-medium py-2 rounded-lg transition-colors"
+                          className="flex-1 bg-[#000000] hover:bg-[#000000]/70 text-[#95D7DE] text-xs font-medium py-2 rounded-lg transition-colors"
                         >
                           Add to cart
                         </button>
                         <button
                           onClick={(e) => e.preventDefault()}
-                          className="flex-1 bg-yellow-400 hover:bg-yellow-300 text-slate-900 text-xs font-semibold py-2 rounded-lg transition-colors"
+                          className="flex-1 bg-[#95D7DE] hover:opacity-90 text-[#000000] text-xs font-semibold py-2 rounded-lg transition-colors"
                         >
                           Buy now
                         </button>
