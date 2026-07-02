@@ -22,10 +22,6 @@ export default function Home() {
   const [products, setProducts] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [input, setInput] = useState("");
-  
-
-
- 
 
   useEffect(() => {
     const getPost = async () => {
@@ -48,8 +44,6 @@ export default function Home() {
 
   return (
     <>
-      
-
       <div>
         <Carousel
           plugins={[
@@ -64,28 +58,28 @@ export default function Home() {
           <CarouselContent>
             <CarouselItem>
               <Image
-                src="/banner1.png"
-                alt="Banner 1"
-                width={1600}
-                height={900}
+                src="/banner.png"
+                alt="Banner1"
+                width={1920}
+                height={765}
                 className="w-full h-auto object-cover"
               />
             </CarouselItem>
             <CarouselItem>
               <Image
                 src="/banner.png"
-                alt="Banner 2"
-                width={1600}
-                height={900}
+                alt="Banner2"
+                width={1920}
+                height={765}
                 className="w-full h-auto object-cover"
               />
             </CarouselItem>
             <CarouselItem>
               <Image
                 src="/banner3.png"
-                alt="Banner 3"
-                width={1600}
-                height={900}
+                alt="Banner3"
+                width={1920}
+                height={765}
                 className="w-full h-auto object-cover"
               />
             </CarouselItem>

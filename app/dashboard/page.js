@@ -1,11 +1,25 @@
-import React from 'react'
-import Sidebar from '../component/sidenavbar/page'
+"use client";
+import React, { useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import Sidebar from "../component/sidenavbar/page";
 import { FaCartPlus } from "react-icons/fa";
 import { FaUserCircle } from "react-icons/fa";
 import { MdLocalShipping } from "react-icons/md";
 
+const Page = () => {
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
-const page = () => {
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/router/login");
+    }
+  }, [status, router]);
+
+  if (status === "loading") return <p>Loading...</p>;
+  if (!session) return null;
+
   return (
     <>
       <h5 className="text-sm text-gray-500 ml-8 mt-6">
@@ -13,18 +27,17 @@ const page = () => {
       </h5>
 
       <div className="flex min-h-screen bg-gray-100">
-        {/* Sidebar */}
         <div className="w-64 hidden md:block">
           <Sidebar />
         </div>
 
-        {/* Main Content */}
         <div className="flex-1 p-6">
-          {/* Header */}
           <div className="mb-8">
             <h5 className="text-gray-600 text-lg">
               Hello,{" "}
-              <span className="font-semibold text-gray-800">Sono 👋</span>
+              <span className="font-semibold text-gray-800">
+                {session.user.name} 👋
+              </span>
             </h5>
 
             <h2 className="text-3xl font-bold text-gray-800 mt-1">
@@ -32,7 +45,7 @@ const page = () => {
             </h2>
 
             <p className="text-gray-500">
-              Here’s what’s happening with your business today.
+              Here's what's happening with your business today.
             </p>
           </div>
 
@@ -62,7 +75,6 @@ const page = () => {
 
           {/* Table Section */}
           <div className="bg-white rounded-xl shadow overflow-hidden">
-            {/* Table Header */}
             <div className="p-5 border-b flex justify-between items-center">
               <h3 className="text-lg font-semibold text-gray-800">
                 Recent Orders
@@ -72,7 +84,6 @@ const page = () => {
               </button>
             </div>
 
-            {/* Table */}
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm text-gray-700">
                 <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
@@ -95,7 +106,6 @@ const page = () => {
                     </td>
                     <td className="px-6 py-4">2024-06-01</td>
                   </tr>
-
                   <tr className="hover:bg-gray-50 transition">
                     <td className="px-6 py-4">Product B</td>
                     <td className="px-6 py-4">$49.99</td>
@@ -106,7 +116,6 @@ const page = () => {
                     </td>
                     <td className="px-6 py-4">2024-06-02</td>
                   </tr>
-
                   <tr className="hover:bg-gray-50 transition">
                     <td className="px-6 py-4">Product C</td>
                     <td className="px-6 py-4">$19.99</td>
@@ -125,6 +134,6 @@ const page = () => {
       </div>
     </>
   );
-}
+};
 
-export default page
+export default Page;

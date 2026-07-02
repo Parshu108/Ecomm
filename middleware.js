@@ -7,7 +7,14 @@ export default auth(function middleware(req) {
   const isLoggedIn = !!req.auth;
 
   const publicPaths = ["/router/login", "/router/register"];
+  const publicApiPaths = ["/api/auth", "/api/register"];
+
   const isPublic = publicPaths.some((p) => pathname.startsWith(p));
+  const isPublicApi = publicApiPaths.some((p) => pathname.startsWith(p));
+
+  if (isPublicApi) {
+    return NextResponse.next();
+  }
 
   if (!isLoggedIn && !isPublic) {
     return NextResponse.redirect(new URL("/router/login", req.url));
@@ -21,5 +28,7 @@ export default auth(function middleware(req) {
 });
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|api/auth|images).*)"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|api/auth|api/register|images).*)",
+  ],
 };

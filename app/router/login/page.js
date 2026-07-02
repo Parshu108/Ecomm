@@ -17,7 +17,6 @@ export default function SignInPage() {
       email,
       password,
       redirect: false,
-      callbackUrl: "/dashboard",
     });
     if (res?.ok) {
       router.push("/dashboard");

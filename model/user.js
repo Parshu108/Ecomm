@@ -17,11 +17,14 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["user", "admin"],
+      enum: ["user", "seller", "superadmin"],
       default: "user",
     },
+    // seller ke liye extra fields
+    shopName: { type: String },
+    isApproved: { type: Boolean, default: false }, // superadmin approve karega
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default mongoose.models.User || mongoose.model("User", userSchema);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 
 const Page = () => {
@@ -10,6 +10,8 @@ const Page = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    role: "user", // 👈 default customer
+    shopName: "",
   });
   const [isAgreed, setIsAgreed] = useState(false);
 
@@ -29,18 +31,35 @@ const Page = () => {
       return;
     }
 
-    const res = await fetch("/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-    alert("User Registered!");
-    window.location.href = "/router/login";
+    if (formData.role === "seller" && !formData.shopName.trim()) {
+      alert("Please enter your shop name");
+      return;
+    }
 
-    const data = await res.json();
-    console.log(data);
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || "Registration failed");
+        return;
+      }
+
+      alert(
+        formData.role === "seller"
+          ? "Seller account created! Waiting for admin approval."
+          : "User Registered!"
+      );
+      window.location.href = "/router/login";
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong. Please try again.");
+    }
   };
 
   return (
@@ -87,6 +106,46 @@ const Page = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
+            {/* Account Type Selection */}
+            <motion.div
+              className="space-y-2"
+              initial={{ x: -30, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.45 }}
+            >
+              <label className="block text-sm font-semibold text-black">
+                Account Type
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFormData((prev) => ({ ...prev, role: "user" }))
+                  }
+                  className={`py-3 rounded-lg border-2 font-semibold transition-all ${
+                    formData.role === "user"
+                      ? "border-yellow-500 bg-yellow-50 text-black"
+                      : "border-slate-300 text-slate-500"
+                  }`}
+                >
+                  Customer
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFormData((prev) => ({ ...prev, role: "seller" }))
+                  }
+                  className={`py-3 rounded-lg border-2 font-semibold transition-all ${
+                    formData.role === "seller"
+                      ? "border-yellow-500 bg-yellow-50 text-black"
+                      : "border-slate-300 text-slate-500"
+                  }`}
+                >
+                  Seller
+                </button>
+              </div>
+            </motion.div>
+
             {/* First Name Field */}
             <motion.div
               className="space-y-2"
@@ -144,6 +203,32 @@ const Page = () => {
                 }}
               />
             </motion.div>
+
+            {/* Shop Name Field — sirf seller ke liye */}
+            {formData.role === "seller" && (
+              <motion.div
+                className="space-y-2"
+                initial={{ x: -30, opacity: 0, height: 0 }}
+                animate={{ x: 0, opacity: 1, height: "auto" }}
+                transition={{ duration: 0.4 }}
+              >
+                <label
+                  htmlFor="shopName"
+                  className="block text-sm font-semibold text-black"
+                >
+                  Shop Name
+                </label>
+                <motion.input
+                  type="text"
+                  id="shopName"
+                  name="shopName"
+                  placeholder="Enter your shop/business name"
+                  value={formData.shopName}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border-2 border-slate-300 rounded-lg focus:border-yellow-500/40 focus:ring-2 focus:ring-yellow-500/20 outline-none transition-all text-black placeholder-slate-400"
+                />
+              </motion.div>
+            )}
 
             {/* Password Field */}
             <motion.div

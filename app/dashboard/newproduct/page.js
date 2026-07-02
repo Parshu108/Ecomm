@@ -40,21 +40,21 @@ const AddProductModal = ({ onAdd }) => {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      // Pass form fields + the File so the parent can upload it
-      await onAdd?.({ ...form, imageFile });
-      setForm(INITIAL_FORM);
-      handleRemoveImage();
-      setIsOpen(false);
-    } catch (err) {
-      console.error("Failed to add product:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const handleAddProduct = async (data) => {
+  const { imageFile, brand, category, ...fields } = data;
+  const formData = new FormData();
+  Object.entries(fields).forEach(([key, value]) => formData.append(key, value));
+  if (imageFile) formData.append("image", imageFile);
+
+  const res = await fetch("/api/electroproduct", { method: "POST", body: formData });
+  // Content-Type header manually mat lagayein, browser khud set karega
+  console.log("Response:", res);
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.message || "Failed to add product");
+  }
+  
+};
 
   const handleClose = () => {
     setForm(INITIAL_FORM);
@@ -112,7 +112,7 @@ const AddProductModal = ({ onAdd }) => {
               </div>
 
               {/* Body */}
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleAddProduct}>
                 <div className="grid gap-4 mb-4 sm:grid-cols-2">
                   <div>
                     <label

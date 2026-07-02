@@ -11,7 +11,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
-        // ✅ API call karo directly — MongoDB middleware mein mat chhuo
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/auth/verify`,
           {
@@ -27,7 +26,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!res.ok) return null;
 
         const user = await res.json();
-        return user;
+        return user; // make sure 'role' is included here
       },
     }),
   ],
@@ -39,11 +38,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.id = user.id;
+      if (user) {
+        token.id = user._id;
+        token.role = user.role; // 👈 add
+      }
       return token;
     },
     async session({ session, token }) {
-      if (token) session.user.id = token.id;
+      if (token) {
+        session.user.id = token.id;
+        session.user.role = token.role; // 👈 add
+      }
       return session;
     },
   },

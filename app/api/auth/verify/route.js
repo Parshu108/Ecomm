@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import connectDB from "@/lib/mongodb";
-import User from "@/model/user";
+import connectDB from "../../../../lib/mongodb";
+import User from "../../../../model/user";
 import bcrypt from "bcryptjs"; // ✅ bcrypt ki jagah bcryptjs use karo
 
 export async function POST(req) {
@@ -37,6 +37,7 @@ export async function POST(req) {
       id: user._id.toString(),
       email: user.email,
       name: user.firstName,
+      role: user.role, // 👈 add kiya
     });
   } catch (error) {
     console.error("❌ Verify error:", error.message); // debug

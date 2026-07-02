@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 const BENEFITS = [
@@ -181,12 +182,12 @@ const NewsletterSection = () => {
         {status !== "success" && (
           <p className="mt-8 text-xs text-slate-400">
             By subscribing you agree to our{" "}
-            <li
+            <Link href="#"
               
               className="hover:text-yellow-500 underline underline-offset-2 transition-colors"
             >
               Privacy Policy
-            </li>
+            </Link>
              Unsubscribe at any time.
           </p>
         )}
