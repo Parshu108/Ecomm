@@ -13,7 +13,6 @@ export const addTocart = async (req) => {
 };
 
 // get item to cart
-
 export const getCart = async (req) => {
   const CartItems = await cart.find();
   return NextResponse.json(CartItems, {
@@ -23,11 +22,56 @@ export const getCart = async (req) => {
 };
 
 // delete cart
-
 export const clearCart = async (req) => {
   await cart.deleteMany({});
   return NextResponse.json({
     message: "cartitem Cleared...",
     success: true,
   });
+};
+
+
+// ✅ update quantity (increase / decrease) for a single item
+export const updateCartQty = async (id, req) => {
+  const { action } = await req.json();
+
+  const item = await cart.findById(id);
+  if (!item) {
+    return NextResponse.json(
+      { message: "Cart item not found", success: false },
+      { status: 404 },
+    );
+  }
+
+  const currentQty = item.qty || 1;
+
+  if (action === "increase") {
+    item.qty = currentQty + 1;
+  } else if (action === "decrease") {
+    item.qty = Math.max(1, currentQty - 1);
+  }
+
+  await item.save();
+
+  return NextResponse.json(item, {
+    message: "Quantity updated",
+    success: true,
+  });
+};
+
+// ✅ remove a single item from cart
+export const removeCartItem = async (id) => {
+  const deleted = await cart.findByIdAndDelete(id);
+
+  if (!deleted) {
+    return NextResponse.json(
+      { message: "Cart item not found", success: false },
+      { status: 404 },
+    );
+  }
+
+  return NextResponse.json(
+    { message: "Item removed from cart", success: true },
+    { status: 200 },
+  );
 };

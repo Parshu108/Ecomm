@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Autoplay from "embla-carousel-autoplay";
+import { useProductcontext } from "./context/productcontext";
 import {
   Carousel,
   CarouselContent,
@@ -10,8 +11,10 @@ import {
 } from "@/components/ui/carousel";
 import { useEffect, useState } from "react";
 import NewsletterSection from "./pages/newlatter/page";
+import { ToastContainer, toast, Bounce } from "react-toastify";
 
 export default function Home() {
+  const {addTocart, getCartdata} = useProductcontext();
   const [products, setProducts] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [input, setInput] = useState("");
@@ -45,6 +48,20 @@ export default function Home() {
         const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
         <body className={`${display.variable} ${body.variable} ${mono.variable} font-[var(--font-body)]`}>
       */}
+
+      <ToastContainer
+        position="top-right"
+        autoClose={1500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        transition={Bounce}
+      />
 
       <div className="bg-black">
         <Carousel
@@ -182,7 +199,13 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <button className="mt-4 w-full rounded-lg border border-[#0A2647] py-2.5 text-sm font-medium text-[#5C7285] transition-colors group-hover:border-[#95D7DE] group-hover:text-[#95D7DE]">
+                  <button
+                    className="mt-4 w-full rounded-lg border border-[#0A2647] py-2.5 text-sm font-medium text-[#5C7285] transition-colors group-hover:border-[#95D7DE] group-hover:text-[#95D7DE]"
+                    onClick={() => {
+                      (addTocart(item.name, item.image, item.price),
+                        getCartdata());
+                    }}
+                  >
                     Add to Cart
                   </button>
                 </div>

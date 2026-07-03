@@ -8,6 +8,7 @@ const CartPages = () => {
   const {
     cart = [],
     clearCart,
+    removeFromCart,
     increaseQty,
     decreaseQty,
   } = useProductcontext();
@@ -63,16 +64,16 @@ const CartPages = () => {
             </span>
           </div>
 
-          {cart.map((product) => (
+          {cart.map((item) => (
             <div
-              key={product._id}
+              key={item._id}
               className="bg-[#001B38] w-180 border border-[#95D7DE]/10 rounded-2xl p-10 flex gap-4 items-start hover:border-[#95D7DE]/30 transition-colors"
             >
               {/* IMAGE */}
               <div className="w-20 h-20 min-w-[100px] bg-black border border-[#95D7DE]/10 rounded-xl flex items-center justify-center overflow-hidden">
                 <Image
-                  src={product.image || "/fallback.png"}
-                  alt={product.name}
+                  src={item.image || "/fallback.png"}
+                  alt={item.name}
                   width={72}
                   height={72}
                   className="object-contain"
@@ -83,25 +84,25 @@ const CartPages = () => {
               {/* DETAILS */}
               <div className="flex-1 min-w-0">
                 <h2 className="text-sm font-medium text-white truncate">
-                  {product.title}
+                  {item.title}
                 </h2>
                 <p className="text-xs text-[#A0A0A0] mt-0.5 mb-3">
-                  ₹{product.price} per item
+                  ₹{item.price} per item
                 </p>
 
                 {/* QUANTITY */}
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => decreaseQty?.(product._id)}
+                    onClick={() => decreaseQty?.(item._id)}
                     className="w-7 h-7 rounded-lg border border-[#95D7DE]/20 text-[#95D7DE] hover:bg-black flex items-center justify-center text-base leading-none transition-colors"
                   >
                     −
                   </button>
                   <span className="text-sm font-medium text-white w-5 text-center">
-                    {product.qty || 1}
+                    {item.qty || 1}
                   </span>
                   <button
-                    onClick={() => increaseQty?.(product._id)}
+                    onClick={() => increaseQty?.(item._id)}
                     className="w-7 h-7 rounded-lg border border-[#95D7DE]/20 text-[#95D7DE] hover:bg-black flex items-center justify-center text-base leading-none transition-colors"
                   >
                     +
@@ -114,6 +115,7 @@ const CartPages = () => {
                 <button
                   className="text-[#A0A0A0] hover:text-red-400 transition-colors"
                   aria-label="Remove item"
+                  onClick={() => removeFromCart?.(item._id)}
                 >
                   <svg
                     className="w-4 h-4"
@@ -130,7 +132,7 @@ const CartPages = () => {
                   </svg>
                 </button>
                 <span className="text-sm font-semibold text-white">
-                  ₹{product.price * (product.qty || 1)}
+                  ₹{item.price * (item.qty || 1)}
                 </span>
               </div>
             </div>

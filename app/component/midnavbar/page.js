@@ -45,7 +45,7 @@ const Midnavbar = () => {
           type="text"
           placeholder="Search here"
           onChange={(e) => setInput(e.target.value)}
-          className="flex-1 px-4 text-sm text-white placeholder-[#A0A0A0] bg-black focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#95D7DE]"
+          className="flex-1 px-4 text-sm  text-white placeholder-[#A0A0A0] bg-black focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#95D7DE]"
         />
 
         {/* Search Button */}
