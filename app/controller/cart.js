@@ -4,8 +4,19 @@ import { NextResponse } from "next/server";
 // add item to cart
 export const addTocart = async (req) => {
   const body = await req.json();
-  const newCart = await cart.create(body);
+  const { name } = body;
 
+  // check if this product already exists in the cart
+  const existing = await cart.findOne({ name });
+
+  if (existing) {
+    return NextResponse.json(
+      { message: "Product already added to cart", success: false },
+      { status: 409 },
+    );
+  }
+
+  const newCart = await cart.create(body);
   return NextResponse.json(newCart, {
     message: "cart sucessfully Created..",
     success: true,

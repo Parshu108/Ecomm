@@ -1,6 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
-import { useSession } from "next-auth/react";
+import  { useEffect, useState } from "react"; 
 import { useRouter } from "next/navigation";
 import Sidebar from "../component/sidenavbar/page";
 import { FaCartPlus } from "react-icons/fa";
@@ -8,17 +7,37 @@ import { FaUserCircle } from "react-icons/fa";
 import { MdLocalShipping } from "react-icons/md";
 
 const Page = () => {
-  const { data: session, status } = useSession();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "unauthenticated") {
+    const token = localStorage.getItem("token");
+    if (!token) {
       router.push("/router/login");
+      return;
     }
-  }, [status, router]);
 
-  if (status === "loading") return <p>Loading...</p>;
-  if (!session) return null;
+    // token verify karke user data lao
+    fetch("/api/users/me", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Invalid token");
+        return res.json();
+      })
+      .then((data) => {
+        setUser(data.user);
+        setLoading(false);
+      })
+      .catch(() => {
+        localStorage.removeItem("token");
+        router.push("/router/login");
+      });
+  }, [router]);
+
+  if (loading) return <p>Loading...</p>;
+  if (!user) return null;
 
   return (
     <>
@@ -36,7 +55,7 @@ const Page = () => {
             <h5 className="text-[#A0A0A0] text-lg">
               Hello,{" "}
               <span className="font-semibold text-white">
-                {session.user.name} 👋
+                {user.name} 👋
               </span>
             </h5>
 

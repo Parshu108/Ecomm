@@ -1,8 +1,8 @@
 // proxy.js  ← root mein (app ke bahar, next.config.mjs ke saath)
-import { auth } from "@/auth";
+// import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
-export default auth(function middleware(req) {
+export default function middleware(req) {
   const { pathname } = req.nextUrl;
   const isLoggedIn = !!req.auth;
 
@@ -16,19 +16,19 @@ export default auth(function middleware(req) {
     return NextResponse.next();
   }
 
-  if (!isLoggedIn && !isPublic) {
-    return NextResponse.redirect(new URL("/router/login", req.url));
-  }
+  // if (!isLoggedIn && !isPublic) {
+  //   return NextResponse.redirect(new URL("/router/login", req.url));
+  // }
 
   if (isLoggedIn && isPublic) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
   return NextResponse.next();
-});
+};
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|api/auth|api/register|images).*)",
+    "/((?!_next/static|_next/image|favicon.ico|api/users/signup|images).*)",
   ],
 };

@@ -31,11 +31,18 @@ export const ProductProvider = ({ children }) => {
           autoClose: 1500,
           theme: "dark",
         });
-        getCartdata(); // ✅ Cart refresh karo
+        getCartdata();
       }
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to add product ❌");
+      if (error.response?.status === 409) {
+        toast.info(error.response.data.message || "Product already added ⚠️", {
+          autoClose: 1500,
+          theme: "dark",
+        });
+      } else {
+        console.error(error);
+        toast.error("Failed to add product ❌");
+      }
     }
   };
 

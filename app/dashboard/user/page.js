@@ -1,12 +1,73 @@
 "use client";
 
-import { useSession, signOut } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Sidebar from "@/app/component/sidenavbar/page";
 import { BiLogOut } from "react-icons/bi";
 import Link from "next/link";
+import { jwtDecode } from "jwt-decode";
 
 export default function DashboardUserPage() {
-  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [user, setUser] = useState(null);
+  const [status, setStatus] = useState("loading");
+
+  useEffect(() => {
+    const raw = localStorage.getItem("token");
+
+    console.log("RAW TOKEN VALUE:", raw);
+
+    if (!raw) {
+      setStatus("unauthenticated");
+      return;
+    }
+
+    let token = raw;
+
+    try {
+      const parsed = JSON.parse(raw);
+      if (typeof parsed === "string") {
+        token = parsed;
+      } else if (parsed && typeof parsed === "object") {
+        token = parsed.token || parsed.accessToken || parsed.jwt;
+      }
+    } catch {
+      // raw already plain JWT string
+    }
+
+    if (!token || token.split(".").length !== 3) {
+      console.error("Token is not a valid JWT after parsing:", token);
+      localStorage.removeItem("token");
+      setStatus("unauthenticated");
+      return;
+    }
+
+    try {
+      const decoded = jwtDecode(token);
+
+      if (decoded.exp && decoded.exp * 1000 < Date.now()) {
+        localStorage.removeItem("token");
+        setStatus("unauthenticated");
+        return;
+      }
+
+      setUser({
+        name: decoded.name,
+        email: decoded.email,
+        id: decoded.id || decoded._id || decoded.sub,
+      });
+      setStatus("authenticated");
+    } catch (err) {
+      console.error("Invalid token", err);
+      localStorage.removeItem("token");
+      setStatus("unauthenticated");
+    }
+  }, []);
+
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    router.push("/");
+  };
 
   if (status === "loading") {
     return (
@@ -18,7 +79,7 @@ export default function DashboardUserPage() {
     );
   }
 
-  if (!session?.user) {
+  if (status === "unauthenticated" || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black p-6">
         <div className="rounded-3xl bg-[#001B38] border border-[#95D7DE]/10 p-10 text-center">
@@ -37,7 +98,7 @@ export default function DashboardUserPage() {
     );
   }
 
-  const { name, email, id } = session.user;
+  const { name, email, id } = user;
 
   return (
     <div className="min-h-screen bg-black">
@@ -60,7 +121,7 @@ export default function DashboardUserPage() {
                   </p>
                 </div>
                 <button
-                  onClick={() => signOut({ callbackUrl: "/" })}
+                  onClick={handleSignOut}
                   className="inline-flex items-center gap-2 rounded-full bg-red-500 px-5 py-3 text-white transition hover:bg-red-600"
                 >
                   <BiLogOut size={18} /> Sign Out

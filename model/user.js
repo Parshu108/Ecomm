@@ -17,9 +17,13 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["user", "seller", "superadmin"],
+      enum: ["user", "admin", "superadmin"],
       default: "user",
     },
+    forgetPasswordToken: String,
+    forgetPasswordTokenExpiry: Date,
+    verifyToken: String,
+    verifyTokenExpiry: Date,
     // seller ke liye extra fields
     shopName: { type: String },
     isApproved: { type: Boolean, default: false }, // superadmin approve karega
