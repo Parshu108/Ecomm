@@ -1,6 +1,6 @@
 // app/api/send-email/route.js
 import { NextResponse } from "next/server";
-import { sendTestEmail } from "../../../lib/helper";
+import { sendEmail } from "../../../lib/helper";
 
 export async function POST(req) {
   try {
@@ -10,7 +10,7 @@ export async function POST(req) {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
 
-    await sendTestEmail(email);
+    await sendEmail(email);
 
     return NextResponse.json({
       message: "Email sent successfully",
