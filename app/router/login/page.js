@@ -37,13 +37,14 @@ export default function LoginPage() {
       });
 
       const data = await res.json();
-      localStorage.setItem("token", data.token);
+
       if (!res.ok) {
         setError(data.error || "Something went wrong");
         setLoading(false);
         return;
       }
 
+      localStorage.setItem("token", data.token);
       router.push("/dashboard");
     } catch (err) {
       setError("Something went wrong, please try again");
@@ -52,20 +53,36 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
+    <div
+      className="min-h-screen flex items-center justify-center px-4"
+      style={{ backgroundColor: "#000000" }}
+    >
       <div className="w-full max-w-md">
-        <div className="bg-white shadow-sm border border-slate-200 rounded-2xl p-8">
+        <div
+          className="rounded-2xl p-8 shadow-sm"
+          style={{
+            backgroundColor: "#001B38",
+            border: "1px solid rgba(149, 215, 222, 0.15)",
+          }}
+        >
           <div className="mb-8 text-center">
-            <h1 className="text-2xl font-semibold text-slate-900">
+            <h1 className="text-2xl font-semibold" style={{ color: "#FFFFFF" }}>
               Welcome back
             </h1>
-            <p className="mt-2 text-sm text-slate-500">
+            <p className="mt-2 text-sm" style={{ color: "#A0A0A0" }}>
               Log in to your account
             </p>
           </div>
 
           {error && (
-            <div className="mb-5 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+            <div
+              className="mb-5 rounded-lg px-4 py-3 text-sm"
+              style={{
+                backgroundColor: "#95D7DE1A",
+                border: "1px solid #95D7DE",
+                color: "#FFFFFF",
+              }}
+            >
               {error}
             </div>
           )}
@@ -74,7 +91,8 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-slate-700 mb-1.5"
+                className="block text-sm font-medium mb-1.5"
+                style={{ color: "#FFFFFF" }}
               >
                 Email address
               </label>
@@ -86,7 +104,16 @@ export default function LoginPage() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="you@example.com"
-                className="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition"
+                className="w-full rounded-lg px-3.5 py-2.5 text-sm transition outline-none"
+                style={{
+                  border: "1px solid rgba(149, 215, 222, 0.2)",
+                  color: "#FFFFFF",
+                  backgroundColor: "#000000",
+                }}
+                onFocus={(e) => (e.target.style.borderColor = "#95D7DE")}
+                onBlur={(e) =>
+                  (e.target.style.borderColor = "rgba(149, 215, 222, 0.2)")
+                }
               />
             </div>
 
@@ -94,13 +121,17 @@ export default function LoginPage() {
               <div className="flex items-center justify-between mb-1.5">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-slate-700"
+                  className="block text-sm font-medium"
+                  style={{ color: "#FFFFFF" }}
                 >
                   Password
                 </label>
                 <Link
                   href="/forgot-password"
-                  className="text-sm font-medium text-slate-500 hover:text-slate-900 hover:underline"
+                  className="text-sm font-medium hover:underline"
+                  style={{ color: "#A0A0A0" }}
+                  onMouseEnter={(e) => (e.target.style.color = "#95D7DE")}
+                  onMouseLeave={(e) => (e.target.style.color = "#A0A0A0")}
                 >
                   Forgot password?
                 </Link>
@@ -113,24 +144,46 @@ export default function LoginPage() {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Enter your password"
-                className="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition"
+                className="w-full rounded-lg px-3.5 py-2.5 text-sm transition outline-none"
+                style={{
+                  border: "1px solid rgba(149, 215, 222, 0.2)",
+                  color: "#FFFFFF",
+                  backgroundColor: "#000000",
+                }}
+                onFocus={(e) => (e.target.style.borderColor = "#95D7DE")}
+                onBlur={(e) =>
+                  (e.target.style.borderColor = "rgba(149, 215, 222, 0.2)")
+                }
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 transition disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full rounded-lg px-4 py-2.5 text-sm font-medium transition disabled:opacity-60 disabled:cursor-not-allowed"
+              style={{
+                backgroundColor: loading
+                  ? "rgba(149, 215, 222, 0.3)"
+                  : "#95D7DE",
+                color: "#000000",
+              }}
+              onMouseEnter={(e) => {
+                if (!loading) e.target.style.backgroundColor = "#7FC5CD";
+              }}
+              onMouseLeave={(e) => {
+                if (!loading) e.target.style.backgroundColor = "#95D7DE";
+              }}
             >
               {loading ? "Logging in..." : "Log in"}
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-slate-500">
+          <p className="mt-6 text-center text-sm" style={{ color: "#A0A0A0" }}>
             Don&apos;t have an account?{" "}
             <Link
               href="/router/register"
-              className="font-medium text-slate-900 hover:underline"
+              className="font-medium hover:underline"
+              style={{ color: "#95D7DE" }}
             >
               Sign up
             </Link>

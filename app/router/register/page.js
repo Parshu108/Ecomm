@@ -58,20 +58,36 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
+    <div
+      className="min-h-screen flex items-center justify-center px-4"
+      style={{ backgroundColor: "#000000" }}
+    >
       <div className="w-full max-w-md">
-        <div className="bg-white shadow-sm border border-slate-200 rounded-2xl p-8">
+        <div
+          className="rounded-2xl p-8 shadow-sm"
+          style={{
+            backgroundColor: "#001B38",
+            border: "1px solid rgba(149, 215, 222, 0.15)",
+          }}
+        >
           <div className="mb-8 text-center">
-            <h1 className="text-2xl font-semibold text-slate-900">
+            <h1 className="text-2xl font-semibold" style={{ color: "#FFFFFF" }}>
               Create your account
             </h1>
-            <p className="mt-2 text-sm text-slate-500">
+            <p className="mt-2 text-sm" style={{ color: "#A0A0A0" }}>
               Sign up to get started
             </p>
           </div>
 
           {error && (
-            <div className="mb-5 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+            <div
+              className="mb-5 rounded-lg px-4 py-3 text-sm"
+              style={{
+                backgroundColor: "#95D7DE" + "1A", // ~10% opacity accent tint
+                border: "1px solid #95D7DE",
+                color: "#FFFFFF",
+              }}
+            >
               {error}
             </div>
           )}
@@ -80,7 +96,8 @@ export default function SignupPage() {
             <div>
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-slate-700 mb-1.5"
+                className="block text-sm font-medium mb-1.5"
+                style={{ color: "#FFFFFF" }}
               >
                 Full name
               </label>
@@ -92,14 +109,24 @@ export default function SignupPage() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="John Doe"
-                className="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition"
+                className="w-full rounded-lg px-3.5 py-2.5 text-sm transition outline-none"
+                style={{
+                  border: "1px solid rgba(149, 215, 222, 0.2)",
+                  color: "#FFFFFF",
+                  backgroundColor: "#000000",
+                }}
+                onFocus={(e) => (e.target.style.borderColor = "#95D7DE")}
+                onBlur={(e) =>
+                  (e.target.style.borderColor = "rgba(149, 215, 222, 0.2)")
+                }
               />
             </div>
 
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-slate-700 mb-1.5"
+                className="block text-sm font-medium mb-1.5"
+                style={{ color: "#FFFFFF" }}
               >
                 Email address
               </label>
@@ -111,14 +138,24 @@ export default function SignupPage() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="you@example.com"
-                className="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition"
+                className="w-full rounded-lg px-3.5 py-2.5 text-sm transition outline-none"
+                style={{
+                  border: "1px solid rgba(149, 215, 222, 0.2)",
+                  color: "#FFFFFF",
+                  backgroundColor: "#000000",
+                }}
+                onFocus={(e) => (e.target.style.borderColor = "#95D7DE")}
+                onBlur={(e) =>
+                  (e.target.style.borderColor = "rgba(149, 215, 222, 0.2)")
+                }
               />
             </div>
 
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-slate-700 mb-1.5"
+                className="block text-sm font-medium mb-1.5"
+                style={{ color: "#FFFFFF" }}
               >
                 Password
               </label>
@@ -130,24 +167,46 @@ export default function SignupPage() {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="At least 6 characters"
-                className="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition"
+                className="w-full rounded-lg px-3.5 py-2.5 text-sm transition outline-none"
+                style={{
+                  border: "1px solid rgba(149, 215, 222, 0.2)",
+                  color: "#FFFFFF",
+                  backgroundColor: "#000000",
+                }}
+                onFocus={(e) => (e.target.style.borderColor = "#95D7DE")}
+                onBlur={(e) =>
+                  (e.target.style.borderColor = "rgba(149, 215, 222, 0.2)")
+                }
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 transition disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full rounded-lg px-4 py-2.5 text-sm font-medium transition disabled:opacity-60 disabled:cursor-not-allowed"
+              style={{
+                backgroundColor: loading
+                  ? "rgba(149, 215, 222, 0.3)"
+                  : "#95D7DE",
+                color: "#000000",
+              }}
+              onMouseEnter={(e) => {
+                if (!loading) e.target.style.backgroundColor = "#7FC5CD";
+              }}
+              onMouseLeave={(e) => {
+                if (!loading) e.target.style.backgroundColor = "#95D7DE";
+              }}
             >
               {loading ? "Creating account..." : "Create account"}
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-slate-500">
+          <p className="mt-6 text-center text-sm" style={{ color: "#A0A0A0" }}>
             Already have an account?{" "}
             <Link
               href="/router/login"
-              className="font-medium text-slate-900 hover:underline"
+              className="font-medium hover:underline"
+              style={{ color: "#95D7DE" }}
             >
               Log in
             </Link>
