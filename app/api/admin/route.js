@@ -1,5 +1,5 @@
 import connectDB from "@/lib/mongodb";
-import admin from "@/model/admin";
+import admin from "@/model/user";
 export async function POST(req) {
   try {
     await connectDB();

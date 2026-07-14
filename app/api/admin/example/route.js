@@ -1,6 +1,6 @@
 // app/api/admin/example/route.js
 import { NextResponse } from "next/server";
-import { requireRole } from "@/lib/auth";
+import { requireRole } from "@/lib/Authhelper";
 
 // Only "admin" and "superadmin" can access this route.
 // Use requireRole("superadmin", ...) if you want to restrict to superadmin only.
