@@ -9,10 +9,10 @@ import { ToastContainer, toast, Bounce } from "react-toastify";
 
 const CATEGORIES = [
   { label: "All", value: "All" },
-  { label: "Mobiles", value: "mobile" },
-  { label: "Headphone", value: "headphone" },
-  { label: "Watch", value: "watch" },
-  { label: "Gaming", value: "remote" },
+  { label: "mobile", value: "mobile" },
+  { label: "headphone", value: "headphone" },
+  { label: "watch", value: "watch" },
+  { label: "remote", value: "remote" },
 ];
 
 const PRICE_TIERS = [1000, 10000, 40000];
@@ -22,7 +22,7 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [filtered, setFiltered] = useState([]);
   const [input, setInput] = useState([]);
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCategory, setActiveCategory] = useState("");
   const [activePrice, setActivePrice] = useState(null);
 
   const { addTocart, getCartdata } = useProductcontext();
@@ -73,7 +73,7 @@ export default function ProductsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <p className="text-center text-[#5C7285] font-[family-name:var(--font-mono)] text-sm tracking-widest uppercase">
+        <p className="text-center text-[#5C7285] font-family-name:var(--font-mono) text-sm tracking-widest uppercase">
           Loading products...
         </p>
       </div>
@@ -143,10 +143,10 @@ export default function ProductsPage() {
       <div className="min-h-screen bg-black px-6 py-10">
         {/* Header */}
         <div className="text-center mb-10">
-          <span className="font-[family-name:var(--font-mono)] text-xs tracking-[0.25em] uppercase text-[#5C7285]">
+          <span className="font-family-name:var(--font-mono) text-xs tracking-[0.25em] uppercase text-[#5C7285]">
             Full Catalog
           </span>
-          <h1 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-bold text-[#EAF6F8] mt-2">
+          <h1 className="font-family-name:var(--font-display) text-3xl sm:text-4xl font-bold text-[#EAF6F8] mt-2">
             Product Store
           </h1>
         </div>
@@ -156,7 +156,7 @@ export default function ProductsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* CATEGORY FILTER */}
               <div className="flex flex-wrap items-center gap-3">
-                <span className="font-[family-name:var(--font-mono)] text-xs tracking-widest uppercase text-[#5C7285]">
+                <span className="font-family-name:var(--font-mono) text-xs tracking-widest uppercase text-[#5C7285]">
                   Category
                 </span>
 
@@ -177,7 +177,7 @@ export default function ProductsPage() {
 
               {/* PRICE FILTER */}
               <div className="flex flex-wrap items-center gap-3">
-                <span className="font-[family-name:var(--font-mono)] text-xs tracking-widest uppercase text-[#5C7285]">
+                <span className="font-family-name:var(--font-mono) text-xs tracking-widest uppercase text-[#5C7285]">
                   Price
                 </span>
 
@@ -185,7 +185,7 @@ export default function ProductsPage() {
                   <button
                     key={price}
                     onClick={() => filterbyprice(price)}
-                    className={`px-4 py-2 text-sm rounded-full border font-[family-name:var(--font-mono)] transition ${
+                    className={`px-4 py-2 text-sm rounded-full border font-family-name:var(--font-mono) transition ${
                       activePrice === price
                         ? "bg-[#95D7DE] text-black border-[#95D7DE] font-medium"
                         : "border-[#0A2647] text-[#95D7DE] hover:bg-[#95D7DE] hover:text-black"
