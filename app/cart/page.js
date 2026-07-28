@@ -70,7 +70,7 @@ const CartPages = () => {
               className="bg-[#001B38] w-180 border border-[#95D7DE]/10 rounded-2xl p-10 flex gap-4 items-start hover:border-[#95D7DE]/30 transition-colors"
             >
               {/* IMAGE */}
-              <div className="w-20 h-20 min-w-100 bg-black border border-[#95D7DE]/10 rounded-xl flex items-center justify-center overflow-hidden">
+              <div className="w-20 h-20 min-w-25 bg-black border border-[#95D7DE]/10 rounded-xl flex items-center justify-center overflow-hidden">
                 <Image
                   src={item.image || "/fallback.png"}
                   alt={item.name}
