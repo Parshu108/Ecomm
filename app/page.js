@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Autoplay from "embla-carousel-autoplay";
-import { useProductcontext } from "./context/productcontext";
+import { useProductcontext } from "../context/productcontext";
 import {
   Carousel,
   CarouselContent,
@@ -14,7 +14,7 @@ import NewsletterSection from "./pages/newlatter/page";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 
 export default function Home() {
-  const {addTocart, getCartdata} = useProductcontext();
+  const { addTocart, getCartdata } = useProductcontext();
   const [products, setProducts] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [input, setInput] = useState("");

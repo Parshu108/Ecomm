@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import product from "../../model/product";
+import product from "../model/product";
 
 export const creatproduct = async (req) => {
   const body = await req.json();

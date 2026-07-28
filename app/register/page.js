@@ -4,10 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function LoginPage() {
+export default function SignupPage() {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
     password: "",
   });
@@ -22,15 +23,20 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
 
-    if (!formData.email || !formData.password) {
+    if (!formData.name || !formData.email || !formData.password) {
       setError("Please fill in all fields");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters");
       return;
     }
 
     setLoading(true);
 
     try {
-      const res = await fetch("/api/users/login", {
+      const res = await fetch("/api/users/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -44,8 +50,7 @@ export default function LoginPage() {
         return;
       }
 
-      localStorage.setItem("token", data.token);
-      router.push("/dashboard");
+      router.push("/router/login");
     } catch (err) {
       setError("Something went wrong, please try again");
       setLoading(false);
@@ -67,10 +72,10 @@ export default function LoginPage() {
         >
           <div className="mb-8 text-center">
             <h1 className="text-2xl font-semibold" style={{ color: "#FFFFFF" }}>
-              Welcome back
+              Create your account
             </h1>
             <p className="mt-2 text-sm" style={{ color: "#A0A0A0" }}>
-              Log in to your account
+              Sign up to get started
             </p>
           </div>
 
@@ -78,7 +83,7 @@ export default function LoginPage() {
             <div
               className="mb-5 rounded-lg px-4 py-3 text-sm"
               style={{
-                backgroundColor: "#95D7DE1A",
+                backgroundColor: "#95D7DE" + "1A", // ~10% opacity accent tint
                 border: "1px solid #95D7DE",
                 color: "#FFFFFF",
               }}
@@ -88,6 +93,35 @@ export default function LoginPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium mb-1.5"
+                style={{ color: "#FFFFFF" }}
+              >
+                Full name
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                autoComplete="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="John Doe"
+                className="w-full rounded-lg px-3.5 py-2.5 text-sm transition outline-none"
+                style={{
+                  border: "1px solid rgba(149, 215, 222, 0.2)",
+                  color: "#FFFFFF",
+                  backgroundColor: "#000000",
+                }}
+                onFocus={(e) => (e.target.style.borderColor = "#95D7DE")}
+                onBlur={(e) =>
+                  (e.target.style.borderColor = "rgba(149, 215, 222, 0.2)")
+                }
+              />
+            </div>
+
             <div>
               <label
                 htmlFor="email"
@@ -118,32 +152,21 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium"
-                  style={{ color: "#FFFFFF" }}
-                >
-                  Password
-                </label>
-                <Link
-                  href="/forgot-password"
-                  className="text-sm font-medium hover:underline"
-                  style={{ color: "#A0A0A0" }}
-                  onMouseEnter={(e) => (e.target.style.color = "#95D7DE")}
-                  onMouseLeave={(e) => (e.target.style.color = "#A0A0A0")}
-                >
-                  Forgot password?
-                </Link>
-              </div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium mb-1.5"
+                style={{ color: "#FFFFFF" }}
+              >
+                Password
+              </label>
               <input
                 id="password"
                 name="password"
                 type="password"
-                autoComplete="current-password"
+                autoComplete="new-password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Enter your password"
+                placeholder="At least 6 characters"
                 className="w-full rounded-lg px-3.5 py-2.5 text-sm transition outline-none"
                 style={{
                   border: "1px solid rgba(149, 215, 222, 0.2)",
@@ -174,18 +197,18 @@ export default function LoginPage() {
                 if (!loading) e.target.style.backgroundColor = "#95D7DE";
               }}
             >
-              {loading ? "Logging in..." : "Log in"}
+              {loading ? "Creating account..." : "Create account"}
             </button>
           </form>
 
           <p className="mt-6 text-center text-sm" style={{ color: "#A0A0A0" }}>
-            Don&apos;t have an account?{" "}
+            Already have an account?{" "}
             <Link
-              href="/router/register"
+              href="/login"
               className="font-medium hover:underline"
               style={{ color: "#95D7DE" }}
             >
-              Sign up
+              Log in
             </Link>
           </p>
         </div>

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useProductcontext } from "../context/productcontext";
+import { useProductcontext } from "../../context/productcontext";
 
 const CartPages = () => {
   const {
@@ -70,7 +70,7 @@ const CartPages = () => {
               className="bg-[#001B38] w-180 border border-[#95D7DE]/10 rounded-2xl p-10 flex gap-4 items-start hover:border-[#95D7DE]/30 transition-colors"
             >
               {/* IMAGE */}
-              <div className="w-20 h-20 min-w-[100px] bg-black border border-[#95D7DE]/10 rounded-xl flex items-center justify-center overflow-hidden">
+              <div className="w-20 h-20 min-w-100 bg-black border border-[#95D7DE]/10 rounded-xl flex items-center justify-center overflow-hidden">
                 <Image
                   src={item.image || "/fallback.png"}
                   alt={item.name}
@@ -164,7 +164,7 @@ const CartPages = () => {
           </div>
 
           <Link
-            href="../checkout"
+            href="../component/checkout"
             className="flex items-center justify-center gap-2 w-full bg-[#95D7DE] hover:bg-[#7FC5CD] text-black py-3 rounded-xl text-sm font-semibold transition-colors"
           >
             <svg

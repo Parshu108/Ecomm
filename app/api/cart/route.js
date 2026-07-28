@@ -1,4 +1,4 @@
-import { addTocart, getCart, clearCart } from "@/app/controller/cart";
+import { addTocart, getCart, clearCart } from "@/service/cart";
 import connectDB from "@/lib/mongodb";
 
 // addtocart

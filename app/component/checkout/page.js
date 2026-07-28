@@ -2,7 +2,7 @@
 
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // ✅ make sure this line exists
-import productcontext from "../context/productcontext";
+import productcontext from "../../../context/productcontext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { toast } from "react-toastify";

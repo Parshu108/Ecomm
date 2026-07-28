@@ -5,7 +5,7 @@ import Link from "next/link";
 import { FaShoppingCart } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
 import { motion } from "motion/react";
-import { useProductcontext } from "@/app/context/productcontext";
+import { useProductcontext } from "@/context/productcontext";
 
 const Navbar = () => {
   const { products, cart } = useProductcontext();
@@ -113,7 +113,7 @@ const Navbar = () => {
                 )}
               </Link>
               <Link
-                href="/router/login"
+                href="/login"
                 className="rounded-full  px-3 py-1.5 text-[18px] hover:bg-[#95D7DE] hover:text-white font-medium text-[#ffffff]  transition"
               >
                 <FaUser />
@@ -124,6 +124,6 @@ const Navbar = () => {
       </nav>
     </>
   );
-};;
+};
 
 export default Navbar;

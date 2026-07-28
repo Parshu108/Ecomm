@@ -1,17 +1,14 @@
 import connectDB from "@/lib/mongodb";
-import { creatproduct, getproduct } from "@/app/controller/product";
-
+import { creatproduct, getproduct } from "@/service/product";
 
 // ✅ GET all products
 export async function GET(req) {
-    await connectDB();
-    return getproduct(req);
+  await connectDB();
+  return getproduct(req);
 }
 
 // ✅ CREATE product
 export async function POST(req) {
-    await connectDB();
-    return creatproduct(req);
+  await connectDB();
+  return creatproduct(req);
 }
-
-

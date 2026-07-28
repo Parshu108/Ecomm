@@ -1,4 +1,4 @@
-import { updateCartQty, removeCartItem } from "@/app/controller/cart";
+import { updateCartQty, removeCartItem } from "@/service/cart";
 import connectDB from "@/lib/mongodb";
 
 // increase / decrease quantity

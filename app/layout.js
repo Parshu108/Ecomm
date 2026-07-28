@@ -2,7 +2,7 @@ import "./globals.css";
 import Navbar from "./component/navbar/page";
 import Footer from "./component/footer/page";
 import Midnavbar from "./component/midnavbar/page";
-import { ProductProvider } from "./context/productcontext";
+import { ProductProvider } from "../context/productcontext";
 import Providers from "./providers";
 import Script from "next/script";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -52,7 +52,7 @@ export default function RootLayout({ children }) {
             <Footer />
           </ProductProvider>
         </Providers>
-        <SpeedInsights/>
+        <SpeedInsights />
         <Script
           src="https://checkout.razorpay.com/v1/checkout.js"
           strategy="beforeInteractive"

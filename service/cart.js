@@ -1,4 +1,4 @@
-import cart from "../../model/cart";
+import cart from "../model/cart";
 import { NextResponse } from "next/server";
 
 // add item to cart
@@ -40,7 +40,6 @@ export const clearCart = async (req) => {
     success: true,
   });
 };
-
 
 // ✅ update quantity (increase / decrease) for a single item
 export const updateCartQty = async (id, req) => {

@@ -6,6 +6,11 @@ import { MdMailOutline } from "react-icons/md";
 import { IoLocationOutline } from "react-icons/io5";
 
 export default function ContactPage() {
+  const [status, setStatus] = useState({
+    loading: false,
+    success: false,
+    error: "",
+  });
   const [formData, setFormData] = useState({
     firstName: "",
     email: "",
@@ -21,18 +26,27 @@ export default function ContactPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
+ const handleSubmit = async (e) => {
+   e.preventDefault();
+   setStatus({ loading: true, success: false, error: "" });
 
-    // Reset form
-    setFormData({
-      firstName: "",
-      email: "",
-      subject: "",
-      message: "",
-    });
-  };
+   try {
+     const res = await fetch("/api/contact", {
+       method: "POST",
+       headers: { "Content-Type": "application/json" },
+       body: JSON.stringify(formData),
+     });
+
+     const data = await res.json();
+
+     if (!res.ok) throw new Error(data.error || "Something went wrong");
+
+     setStatus({ loading: false, success: true, error: "" });
+     setFormData({ firstName: "", email: "", subject: "", message: "" });
+   } catch (err) {
+     setStatus({ loading: false, success: false, error: err.message });
+   }
+ };
 
   return (
     <section className="bg-[#000000] min-h-screen py-12">
@@ -172,13 +186,21 @@ export default function ContactPage() {
           outline-none transition"
               required
             />
-
+            {status.success && (
+              <p className="text-[#95D7DE] text-sm">
+                Message sent! Well get back to you soon.
+              </p>
+            )}
+            {status.error && (
+              <p className="text-red-400 text-sm">{status.error}</p>
+            )}
             <button
               type="submit"
+              disabled={status.loading}
               className="w-full bg-[#95D7DE] text-[#000000] py-3 rounded-lg font-semibold 
           hover:bg-[#FFFFFF] transition duration-300"
             >
-              Send Now
+              {status.loading ? "Sending..." : "Send Now"}
             </button>
           </form>
         </div>

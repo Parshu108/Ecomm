@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useProductcontext } from "../context/productcontext";
+import { useProductcontext } from "../../context/productcontext";
 import Image from "next/image";
 import { CiDeliveryTruck } from "react-icons/ci";
 import { GiReturnArrow } from "react-icons/gi";
@@ -113,7 +113,7 @@ const Page = () => {
             Shop
           </Link>
           <span>/</span>
-          <span className="text-[#FFFFFF] truncate max-w-[200px]">
+          <span className="text-[#FFFFFF] truncate max-w-200px">
             {product.name}
           </span>
         </nav>
