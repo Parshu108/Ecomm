@@ -36,7 +36,7 @@ export default function ProductsPage() {
     async function getPost() {
       try {
         const res = await fetch("/api/electroproduct");
-        if (!res.ok) throw new Error("Failed to fetch products");
+        // if (!res.ok) throw new Error("Failed to fetch products");
         const data = await res.json();
         setProducts(data);
         setFiltered(data);
