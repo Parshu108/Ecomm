@@ -14,7 +14,15 @@ import {
 import { useEffect, useState } from "react";
 import NewsletterSection from "./pages/newlatter/page";
 import { ToastContainer, Bounce } from "react-toastify";
-import { FaTruck, FaShieldAlt, FaHeadset, FaUndo, FaStar, FaShoppingCart, FaArrowRight } from "react-icons/fa";
+import {
+  FaTruck,
+  FaShieldAlt,
+  FaHeadset,
+  FaUndo,
+  FaStar,
+  FaShoppingCart,
+  FaArrowRight,
+} from "react-icons/fa";
 
 export default function Home() {
   const { addTocart, getCartdata } = useProductcontext();
@@ -30,9 +38,15 @@ export default function Home() {
           throw new Error("Failed to fetch products");
         }
         const data = await res.json();
-        setProducts(data);
+        const normalizedProducts = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.products)
+            ? data.products
+            : [];
+        setProducts(normalizedProducts);
       } catch (error) {
         console.log("Error fetching products:", error);
+        setProducts([]);
       } finally {
         setLoading(false);
       }
@@ -43,9 +57,12 @@ export default function Home() {
 
   const categories = ["All", "Audio", "Wearables", "Laptops", "Accessories"];
 
-  const displayedProducts = filteredCategory === "All"
-    ? products
-    : products.filter((p) => p.category?.toLowerCase() === filteredCategory.toLowerCase());
+  const displayedProducts =
+    filteredCategory === "All"
+      ? products
+      : products.filter(
+          (p) => p.category?.toLowerCase() === filteredCategory.toLowerCase(),
+        );
 
   return (
     <div className="bg-[#07090e] min-h-screen text-slate-100 selection:bg-cyan-500 selection:text-black">
@@ -87,24 +104,26 @@ export default function Home() {
                   className="object-cover object-right opacity-40 lg:opacity-60"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-[#07090e] via-[#07090e]/80 to-transparent" />
-                
+
                 <div className="relative max-w-7xl mx-auto px-6 w-full z-10">
                   <div className="max-w-2xl space-y-6">
                     <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
                       ⚡ Seasonal Special · 2026 Edition
                     </span>
-                    
+
                     <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-[1.1]">
                       Next-Gen Audio & <br />
                       <span className="bg-gradient-to-r from-cyan-400 via-teal-300 to-indigo-500 bg-clip-text text-transparent">
                         Premium Tech Gear
                       </span>
                     </h1>
-                    
+
                     <p className="text-slate-300 text-base sm:text-lg max-w-lg leading-relaxed">
-                      Experience studio-grade acoustics and high-performance smart devices with exclusive seasonal discounts up to 40% off.
+                      Experience studio-grade acoustics and high-performance
+                      smart devices with exclusive seasonal discounts up to 40%
+                      off.
                     </p>
-                    
+
                     <div className="flex flex-wrap gap-4 pt-2">
                       <Link
                         href="/shop"
@@ -135,24 +154,25 @@ export default function Home() {
                   className="object-cover object-right opacity-40 lg:opacity-60"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-[#07090e] via-[#07090e]/80 to-transparent" />
-                
+
                 <div className="relative max-w-7xl mx-auto px-6 w-full z-10">
                   <div className="max-w-2xl space-y-6">
                     <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase bg-indigo-500/10 text-indigo-400 border border-indigo-500/30">
                       🔥 Top Rated Electronics
                     </span>
-                    
+
                     <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-[1.1]">
                       Elevate Your <br />
                       <span className="bg-gradient-to-r from-indigo-400 via-purple-300 to-cyan-400 bg-clip-text text-transparent">
                         Digital Lifestyle
                       </span>
                     </h1>
-                    
+
                     <p className="text-slate-300 text-base sm:text-lg max-w-lg leading-relaxed">
-                      Discover lightweight wearables, wireless gaming gear, and ultra-durable accessories engineered for perfection.
+                      Discover lightweight wearables, wireless gaming gear, and
+                      ultra-durable accessories engineered for perfection.
                     </p>
-                    
+
                     <div className="flex flex-wrap gap-4 pt-2">
                       <Link
                         href="/shop"
@@ -177,12 +197,31 @@ export default function Home() {
       <section className="border-b border-slate-800/80 bg-slate-950/60 py-8">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
-            { icon: <FaTruck className="text-cyan-400 text-xl" />, title: "Free Express Shipping", desc: "On all orders above ₹999" },
-            { icon: <FaUndo className="text-cyan-400 text-xl" />, title: "7-Day Easy Returns", desc: "Hassle-free replacement guarantee" },
-            { icon: <FaShieldAlt className="text-cyan-400 text-xl" />, title: "100% Secure Checkout", desc: "Encrypted Razorpay payments" },
-            { icon: <FaHeadset className="text-cyan-400 text-xl" />, title: "24/7 Dedicated Support", desc: "Expert technical assistance" },
+            {
+              icon: <FaTruck className="text-cyan-400 text-xl" />,
+              title: "Free Express Shipping",
+              desc: "On all orders above ₹999",
+            },
+            {
+              icon: <FaUndo className="text-cyan-400 text-xl" />,
+              title: "7-Day Easy Returns",
+              desc: "Hassle-free replacement guarantee",
+            },
+            {
+              icon: <FaShieldAlt className="text-cyan-400 text-xl" />,
+              title: "100% Secure Checkout",
+              desc: "Encrypted Razorpay payments",
+            },
+            {
+              icon: <FaHeadset className="text-cyan-400 text-xl" />,
+              title: "24/7 Dedicated Support",
+              desc: "Expert technical assistance",
+            },
           ].map((item, idx) => (
-            <div key={idx} className="flex items-center gap-3.5 p-3 rounded-2xl bg-slate-900/40 border border-slate-800/60">
+            <div
+              key={idx}
+              className="flex items-center gap-3.5 p-3 rounded-2xl bg-slate-900/40 border border-slate-800/60"
+            >
               <div className="p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex-shrink-0">
                 {item.icon}
               </div>
@@ -199,8 +238,12 @@ export default function Home() {
       <section className="py-20 max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
           <div>
-            <span className="text-xs font-mono tracking-widest text-cyan-400 uppercase">Curated Catalog</span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">Featured Products</h2>
+            <span className="text-xs font-mono tracking-widest text-cyan-400 uppercase">
+              Curated Catalog
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">
+              Featured Products
+            </h2>
           </div>
 
           {/* CATEGORY FILTER PILLS */}
@@ -224,12 +267,17 @@ export default function Home() {
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((n) => (
-              <div key={n} className="h-96 rounded-2xl bg-slate-900/60 animate-pulse border border-slate-800" />
+              <div
+                key={n}
+                className="h-96 rounded-2xl bg-slate-900/60 animate-pulse border border-slate-800"
+              />
             ))}
           </div>
         ) : displayedProducts.length === 0 ? (
           <div className="text-center py-20 bg-slate-900/40 rounded-3xl border border-dashed border-slate-800">
-            <p className="text-lg text-slate-400 font-medium">No products found in this category.</p>
+            <p className="text-lg text-slate-400 font-medium">
+              No products found in this category.
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -261,7 +309,9 @@ export default function Home() {
                         {[...Array(5)].map((_, i) => (
                           <FaStar key={i} />
                         ))}
-                        <span className="text-slate-400 ml-1.5 text-xs font-mono">(4.8)</span>
+                        <span className="text-slate-400 ml-1.5 text-xs font-mono">
+                          (4.8)
+                        </span>
                       </div>
 
                       <Link href={`/${item._id}`}>

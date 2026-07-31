@@ -5,7 +5,13 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useProductcontext } from "../../context/productcontext";
 import { ToastContainer, Bounce } from "react-toastify";
-import { FaSearch, FaStar, FaShoppingCart, FaEye, FaSlidersH } from "react-icons/fa";
+import {
+  FaSearch,
+  FaStar,
+  FaShoppingCart,
+  FaEye,
+  FaSlidersH,
+} from "react-icons/fa";
 
 const CATEGORIES = [
   { label: "All Products", value: "All" },
@@ -36,12 +42,21 @@ export default function ProductsPage() {
     async function getPost() {
       try {
         const res = await fetch("/api/electroproduct");
-        // if (!res.ok) throw new Error("Failed to fetch products");
+        if (!res.ok) throw new Error("Failed to fetch products");
+
         const data = await res.json();
-        setProducts(data);
-        setFiltered(data);
+        const normalizedProducts = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.products)
+            ? data.products
+            : [];
+
+        setProducts(normalizedProducts);
+        setFiltered(normalizedProducts);
       } catch (error) {
         console.error("Error fetching products:", error);
+        setProducts([]);
+        setFiltered([]);
       } finally {
         setLoading(false);
       }
@@ -50,11 +65,17 @@ export default function ProductsPage() {
     getPost();
   }, []);
 
-  const filterProducts = (category = activeCategory, price = activePrice, searchQuery = input) => {
+  const filterProducts = (
+    category = activeCategory,
+    price = activePrice,
+    searchQuery = input,
+  ) => {
     let result = [...products];
 
     if (category && category !== "All") {
-      result = result.filter((item) => item.category?.toLowerCase() === category.toLowerCase());
+      result = result.filter(
+        (item) => item.category?.toLowerCase() === category.toLowerCase(),
+      );
     }
 
     if (price > 0) {
@@ -63,7 +84,7 @@ export default function ProductsPage() {
 
     if (searchQuery.trim()) {
       result = result.filter((item) =>
-        item.name.toLowerCase().includes(searchQuery.toLowerCase())
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
 
@@ -124,7 +145,8 @@ export default function ProductsPage() {
             Shop Catalog
           </h1>
           <p className="text-slate-400 text-sm max-w-xl mx-auto">
-            Browse our full range of high-performance electronics, audio devices, and accessories with instant checkout.
+            Browse our full range of high-performance electronics, audio
+            devices, and accessories with instant checkout.
           </p>
         </div>
 
@@ -192,7 +214,9 @@ export default function ProductsPage() {
         {/* PRODUCT GRID */}
         {filtered.length === 0 ? (
           <div className="text-center py-24 bg-slate-900/40 rounded-3xl border border-dashed border-slate-800">
-            <p className="text-lg text-slate-400 font-medium">No matching products found.</p>
+            <p className="text-lg text-slate-400 font-medium">
+              No matching products found.
+            </p>
             <button
               onClick={() => {
                 setActiveCategory("All");
@@ -230,7 +254,9 @@ export default function ProductsPage() {
                       {[...Array(5)].map((_, i) => (
                         <FaStar key={i} />
                       ))}
-                      <span className="text-slate-400 ml-1 font-mono text-[11px]">(4.9)</span>
+                      <span className="text-slate-400 ml-1 font-mono text-[11px]">
+                        (4.9)
+                      </span>
                     </div>
 
                     <Link href={`/${product._id}`}>
@@ -240,7 +266,8 @@ export default function ProductsPage() {
                     </Link>
 
                     <p className="text-xs text-slate-400 line-clamp-2">
-                      {product.description || "High quality tech component with warranty."}
+                      {product.description ||
+                        "High quality tech component with warranty."}
                     </p>
 
                     <div className="flex items-baseline gap-2 pt-2 font-mono">

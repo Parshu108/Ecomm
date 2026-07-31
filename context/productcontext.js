@@ -17,9 +17,16 @@ export const ProductProvider = ({ children }) => {
   const fetchall = async () => {
     try {
       const api = await axios.get(`${API_URI}/electroproduct`);
-      setProduct(api.data);
+      // API returns { success, message, products }
+      if (api.data && api.data.success) {
+        setProduct(Array.isArray(api.data.products) ? api.data.products : []);
+      } else {
+        console.error("Products fetch returned error:", api.data);
+        setProduct([]);
+      }
     } catch (error) {
       console.error("Products fetch error:", error);
+      setProduct([]);
     }
   };
 
@@ -66,61 +73,60 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
- const increaseQty = async (id) => {
-   setCart((prev) =>
-     prev.map((item) =>
-       item._id === id ? { ...item, qty: (item.qty || 1) + 1 } : item,
-     ),
-   );
-   try {
-     await axios.post(`${API_URI}/cart/${id}`, { action: "increase" });
-     getCartdata();
-   } catch (error) {
-     console.error("Increase quantity error:", error);
-     toast.error("Failed to update quantity ❌");
-     getCartdata();
-   }
- };
+  const increaseQty = async (id) => {
+    setCart((prev) =>
+      prev.map((item) =>
+        item._id === id ? { ...item, qty: (item.qty || 1) + 1 } : item,
+      ),
+    );
+    try {
+      await axios.post(`${API_URI}/cart/${id}`, { action: "increase" });
+      getCartdata();
+    } catch (error) {
+      console.error("Increase quantity error:", error);
+      toast.error("Failed to update quantity ❌");
+      getCartdata();
+    }
+  };
 
- const decreaseQty = async (id) => {
-   const current = cart.find((item) => item._id === id);
-   if (current && (current.qty || 1) <= 1) {
-     return removeFromCart(id);
-   }
-   setCart((prev) =>
-     prev.map((item) =>
-       item._id === id
-         ? { ...item, qty: Math.max(1, (item.qty || 1) - 1) }
-         : item,
-     ),
-   );
-   try {
-     await axios.post(`${API_URI}/cart/${id}`, { action: "decrease" });
-     getCartdata();
-   } catch (error) {
-     console.error("Decrease quantity error:", error);
-     toast.error("Failed to update quantity ❌");
-     getCartdata();
-   }
- };
+  const decreaseQty = async (id) => {
+    const current = cart.find((item) => item._id === id);
+    if (current && (current.qty || 1) <= 1) {
+      return removeFromCart(id);
+    }
+    setCart((prev) =>
+      prev.map((item) =>
+        item._id === id
+          ? { ...item, qty: Math.max(1, (item.qty || 1) - 1) }
+          : item,
+      ),
+    );
+    try {
+      await axios.post(`${API_URI}/cart/${id}`, { action: "decrease" });
+      getCartdata();
+    } catch (error) {
+      console.error("Decrease quantity error:", error);
+      toast.error("Failed to update quantity ❌");
+      getCartdata();
+    }
+  };
 
- const removeFromCart = async (id) => {
-   const previousCart = cart;
-   setCart((prev) => prev.filter((item) => item._id !== id));
-   try {
-     const api = await axios.delete(`${API_URI}/cart/${id}`);
-     toast.success(api.data?.message || "Removed from cart 🗑️", {
-       autoClose: 1500,
-       theme: "dark",
-     });
-     getCartdata();
-   } catch (error) {
-     console.error("Remove from cart error:", error);
-     toast.error("Failed to remove product ❌");
-     setCart(previousCart);
-   }
- };
-
+  const removeFromCart = async (id) => {
+    const previousCart = cart;
+    setCart((prev) => prev.filter((item) => item._id !== id));
+    try {
+      const api = await axios.delete(`${API_URI}/cart/${id}`);
+      toast.success(api.data?.message || "Removed from cart 🗑️", {
+        autoClose: 1500,
+        theme: "dark",
+      });
+      getCartdata();
+    } catch (error) {
+      console.error("Remove from cart error:", error);
+      toast.error("Failed to remove product ❌");
+      setCart(previousCart);
+    }
+  };
 
   useEffect(() => {
     const initData = async () => {
