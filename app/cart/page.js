@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useProductcontext } from "../../context/productcontext";
+import { FaTrashAlt, FaLock, FaArrowLeft, FaShoppingBag, FaTag } from "react-icons/fa";
 
 const CartPages = () => {
   const {
@@ -15,204 +16,176 @@ const CartPages = () => {
 
   const total = cart.reduce(
     (acc, item) => acc + item.price * (item.qty || 1),
-    0,
+    0
   );
 
   if (!cart || cart.length === 0) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center text-center bg-black px-4">
-        <div className="w-20 h-20 rounded-full bg-[#001B38] border border-[#95D7DE]/20 flex items-center justify-center mb-6">
-          <svg
-            className="w-10 h-10 text-[#95D7DE]"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+      <div className="min-h-screen flex flex-col items-center justify-center text-center bg-[#07090e] px-4">
+        <div className="glass-panel p-10 rounded-3xl max-w-md w-full space-y-5 border border-slate-800">
+          <div className="w-20 h-20 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center mx-auto text-cyan-400 text-3xl shadow-[0_0_20px_rgba(6,182,212,0.2)]">
+            <FaShoppingBag />
+          </div>
+          <h1 className="text-2xl font-extrabold text-white">Your Cart is Empty</h1>
+          <p className="text-slate-400 text-sm">
+            Looks like you haven't added any products to your shopping cart yet.
+          </p>
+          <Link
+            href="/shop"
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-cyan-500 text-black text-sm font-extrabold hover:bg-cyan-400 transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)]"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={1.5}
-              d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-            />
-          </svg>
+            <FaArrowLeft className="text-xs" /> Continue Shopping
+          </Link>
         </div>
-        <h1 className="text-2xl font-semibold text-white mb-2">
-          Your cart is empty
-        </h1>
-        <p className="text-[#A0A0A0] text-sm mb-8">
-          Looks like you haven,t added anything yet.
-        </p>
-        <Link
-          href="../shop"
-          className="bg-[#95D7DE] text-black px-8 py-3 rounded-xl text-sm font-medium hover:bg-[#7FC5CD] transition-colors"
-        >
-          Continue shopping
-        </Link>
       </div>
     );
   }
 
   return (
-    <div className="bg-black min-h-screen py-10">
-      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-3 gap-8">
-        {/* LEFT — CART ITEMS */}
-        <div className="lg:col-span-2 space-y-5">
-          <div className="flex items-center gap-3 mb-6">
-            <h1 className="text-2xl font-semibold text-white">Shopping cart</h1>
-            <span className="text-xs text-[#95D7DE] bg-[#001B38] border border-[#95D7DE]/20 px-2.5 py-1 rounded-full">
-              {cart.length} {cart.length === 1 ? "item" : "items"}
-            </span>
-          </div>
-
-          {cart.map((item) => (
-            <div
-              key={item._id}
-              className="bg-[#001B38] w-180 border border-[#95D7DE]/10 rounded-2xl p-10 flex gap-4 items-start hover:border-[#95D7DE]/30 transition-colors"
-            >
-              {/* IMAGE */}
-              <div className="w-20 h-20 min-w-25 bg-black border border-[#95D7DE]/10 rounded-xl flex items-center justify-center overflow-hidden">
-                <Image
-                  src={item.image || "/fallback.png"}
-                  alt={item.name}
-                  width={72}
-                  height={72}
-                  className="object-contain"
-                  unoptimized
-                />
-              </div>
-
-              {/* DETAILS */}
-              <div className="flex-1 min-w-0">
-                <h2 className="text-sm font-medium text-white truncate">
-                  {item.title}
-                </h2>
-                <p className="text-xs text-[#A0A0A0] mt-0.5 mb-3">
-                  ₹{item.price} per item
-                </p>
-
-                {/* QUANTITY */}
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => decreaseQty?.(item._id)}
-                    className="w-7 h-7 rounded-lg border border-[#95D7DE]/20 text-[#95D7DE] hover:bg-black flex items-center justify-center text-base leading-none transition-colors"
-                  >
-                    −
-                  </button>
-                  <span className="text-sm font-medium text-white w-5 text-center">
-                    {item.qty || 1}
-                  </span>
-                  <button
-                    onClick={() => increaseQty?.(item._id)}
-                    className="w-7 h-7 rounded-lg border border-[#95D7DE]/20 text-[#95D7DE] hover:bg-black flex items-center justify-center text-base leading-none transition-colors"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              {/* PRICE + REMOVE */}
-              <div className="flex flex-col items-end gap-2">
-                <button
-                  className="text-[#A0A0A0] hover:text-red-400 transition-colors"
-                  aria-label="Remove item"
-                  onClick={() => removeFromCart?.(item._id)}
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-                <span className="text-sm font-semibold text-white">
-                  ₹{item.price * (item.qty || 1)}
-                </span>
-              </div>
-            </div>
-          ))}
+    <div className="bg-[#07090e] min-h-screen py-12 px-4 sm:px-6 lg:px-8 text-slate-100">
+      <div className="max-w-7xl mx-auto space-y-8">
+        <div>
+          <h1 className="text-3xl font-extrabold text-white">Shopping Cart</h1>
+          <p className="text-sm text-slate-400 mt-1">
+            Review your selected tech gear before checkout.
+          </p>
         </div>
 
-        {/* RIGHT — ORDER SUMMARY */}
-        <div className="bg-[#001B38] border border-[#95D7DE]/10 rounded-2xl p-6 h-fit sticky top-20 space-y-4">
-          <h2 className="text-base font-semibold text-white">Order summary</h2>
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* CART ITEMS LIST */}
+          <div className="lg:col-span-2 space-y-4">
+            {cart.map((item) => (
+              <div
+                key={item._id}
+                className="glass-panel rounded-2xl p-5 border border-slate-800/80 flex flex-col sm:flex-row gap-5 items-center justify-between hover:border-cyan-500/40 transition-all"
+              >
+                <div className="flex items-center gap-4 w-full sm:w-auto">
+                  <div className="relative w-20 h-20 bg-slate-950 rounded-xl flex-shrink-0 p-2 border border-slate-800 flex items-center justify-center">
+                    <Image
+                      src={item.image || "/fallback.png"}
+                      alt={item.name || item.title || "Product"}
+                      fill
+                      className="object-contain p-1"
+                      unoptimized
+                    />
+                  </div>
 
-          <div className="space-y-3 text-sm">
-            <div className="flex justify-between text-[#A0A0A0]">
-              <span>Items</span>
-              <span className="text-white">{cart.length}</span>
-            </div>
-            <div className="flex justify-between text-[#A0A0A0]">
-              <span>Subtotal</span>
-              <span className="text-white">₹{total}</span>
-            </div>
-            <div className="flex justify-between text-[#A0A0A0]">
-              <span>Delivery</span>
-              <span className="text-[#95D7DE] font-medium">Free</span>
+                  <div className="space-y-1 min-w-0">
+                    <h3 className="text-base font-bold text-white truncate">
+                      {item.name || item.title}
+                    </h3>
+                    <p className="text-xs text-slate-400 font-mono">
+                      ₹{item.price} per item
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-800">
+                  {/* QUANTITY ADJUSTER */}
+                  <div className="flex items-center border border-slate-800 rounded-xl bg-slate-900 overflow-hidden">
+                    <button
+                      onClick={() => decreaseQty?.(item._id)}
+                      className="w-8 h-8 text-cyan-400 hover:bg-slate-800 transition-colors font-bold flex items-center justify-center"
+                    >
+                      −
+                    </button>
+                    <span className="w-8 text-center text-xs font-bold font-mono text-white">
+                      {item.qty || 1}
+                    </span>
+                    <button
+                      onClick={() => increaseQty?.(item._id)}
+                      className="w-8 h-8 text-cyan-400 hover:bg-slate-800 transition-colors font-bold flex items-center justify-center"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  {/* PRICE & REMOVE */}
+                  <div className="text-right">
+                    <span className="text-base font-extrabold text-cyan-400 font-mono block">
+                      ₹{item.price * (item.qty || 1)}
+                    </span>
+                    <button
+                      onClick={() => removeFromCart?.(item._id)}
+                      className="text-xs text-slate-500 hover:text-red-400 transition-colors inline-flex items-center gap-1 mt-1"
+                    >
+                      <FaTrashAlt /> Remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            <div className="flex justify-between items-center pt-2">
+              <button
+                onClick={clearCart}
+                className="px-4 py-2 rounded-xl text-xs font-bold border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-all"
+              >
+                Clear Entire Cart
+              </button>
+
+              <Link
+                href="/shop"
+                className="text-xs font-semibold text-slate-400 hover:text-cyan-400 transition-colors flex items-center gap-1.5"
+              >
+                ← Continue Shopping
+              </Link>
             </div>
           </div>
 
-          <div className="border-t border-[#95D7DE]/10 pt-4 flex justify-between items-center">
-            <span className="text-sm font-semibold text-white">Total</span>
-            <span className="text-lg font-semibold text-white">₹{total}</span>
+          {/* ORDER SUMMARY */}
+          <div className="glass-panel p-6 rounded-3xl border border-slate-800 space-y-6 h-fit sticky top-24">
+            <h2 className="text-lg font-bold text-white">Order Summary</h2>
+
+            <div className="space-y-3 text-sm font-medium">
+              <div className="flex justify-between text-slate-400">
+                <span>Selected Items</span>
+                <span className="text-white font-mono">{cart.length}</span>
+              </div>
+              <div className="flex justify-between text-slate-400">
+                <span>Subtotal</span>
+                <span className="text-white font-mono">₹{total}</span>
+              </div>
+              <div className="flex justify-between text-slate-400">
+                <span>Shipping Fee</span>
+                <span className="text-cyan-400 font-mono font-bold">FREE</span>
+              </div>
+            </div>
+
+            {/* PROMO CODE */}
+            <div className="pt-2">
+              <div className="relative flex items-center">
+                <FaTag className="absolute left-3 text-slate-500 text-xs" />
+                <input
+                  type="text"
+                  placeholder="Promo code (e.g. SHOP2026)"
+                  className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-16 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
+                />
+                <button className="absolute right-1 px-3 py-1.5 rounded-lg bg-slate-800 text-cyan-400 text-[11px] font-bold hover:bg-slate-700">
+                  Apply
+                </button>
+              </div>
+            </div>
+
+            <div className="border-t border-slate-800/80 pt-4 flex justify-between items-center">
+              <span className="text-base font-bold text-white">Total Amount</span>
+              <span className="text-2xl font-extrabold text-cyan-400 font-mono">
+                ₹{total}
+              </span>
+            </div>
+
+            <Link
+              href="/component/checkout"
+              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-cyan-500 text-black text-sm font-extrabold hover:bg-cyan-400 transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)]"
+            >
+              <FaLock className="text-xs" /> Proceed to Checkout
+            </Link>
+
+            <p className="text-[11px] text-slate-500 text-center flex items-center justify-center gap-1.5">
+              <FaLock className="text-cyan-400" />
+              256-Bit SSL Encrypted Razorpay Checkout
+            </p>
           </div>
-
-          <Link
-            href="../component/checkout"
-            className="flex items-center justify-center gap-2 w-full bg-[#95D7DE] hover:bg-[#7FC5CD] text-black py-3 rounded-xl text-sm font-semibold transition-colors"
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
-            </svg>
-            Proceed to checkout
-          </Link>
-
-          <button
-            onClick={clearCart}
-            className="w-full border border-red-400/30 text-red-400 hover:bg-red-400/10 py-2.5 rounded-xl text-sm font-medium transition-colors"
-          >
-            Clear cart
-          </button>
-
-          <Link
-            href="../shop"
-            className="flex items-center justify-center gap-1.5 w-full border border-[#95D7DE]/20 text-[#A0A0A0] hover:bg-black hover:text-white py-2.5 rounded-xl text-sm transition-colors"
-          >
-            ← Continue shopping
-          </Link>
-
-          <p className="text-xs text-[#95D7DE] text-center flex items-center justify-center gap-1.5">
-            <svg
-              className="w-3.5 h-3.5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-              />
-            </svg>
-            Secure checkout · Free delivery on all orders
-          </p>
         </div>
       </div>
     </div>

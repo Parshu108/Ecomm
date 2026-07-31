@@ -6,7 +6,7 @@ export default function middleware(req) {
   const { pathname } = req.nextUrl;
   const isLoggedIn = !!req.auth;
 
-  const publicPaths = ["/router/login", "/router/register"];
+  const publicPaths = ["/login", "/register"];
   const publicApiPaths = ["/api/auth", "/api/register"];
 
   const isPublic = publicPaths.some((p) => pathname.startsWith(p));

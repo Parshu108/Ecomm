@@ -13,55 +13,58 @@ export default function DashboardUserPage() {
   const [status, setStatus] = useState("loading");
 
   useEffect(() => {
-    const raw = localStorage.getItem("token");
+    const timer = setTimeout(() => {
+      const raw = localStorage.getItem("token");
 
-    console.log("RAW TOKEN VALUE:", raw);
+      console.log("RAW TOKEN VALUE:", raw);
 
-    if (!raw) {
-      setStatus("unauthenticated");
-      return;
-    }
-
-    let token = raw;
-
-    try {
-      const parsed = JSON.parse(raw);
-      if (typeof parsed === "string") {
-        token = parsed;
-      } else if (parsed && typeof parsed === "object") {
-        token = parsed.token || parsed.accessToken || parsed.jwt;
+      if (!raw) {
+        setStatus("unauthenticated");
+        return;
       }
-    } catch {
-      // raw already plain JWT string
-    }
 
-    if (!token || token.split(".").length !== 3) {
-      console.error("Token is not a valid JWT after parsing:", token);
-      localStorage.removeItem("token");
-      setStatus("unauthenticated");
-      return;
-    }
+      let token = raw;
 
-    try {
-      const decoded = jwtDecode(token);
+      try {
+        const parsed = JSON.parse(raw);
+        if (typeof parsed === "string") {
+          token = parsed;
+        } else if (parsed && typeof parsed === "object") {
+          token = parsed.token || parsed.accessToken || parsed.jwt;
+        }
+      } catch {
+        // raw already plain JWT string
+      }
 
-      if (decoded.exp && decoded.exp * 1000 < Date.now()) {
+      if (!token || token.split(".").length !== 3) {
+        console.error("Token is not a valid JWT after parsing:", token);
         localStorage.removeItem("token");
         setStatus("unauthenticated");
         return;
       }
 
-      setUser({
-        name: decoded.name,
-        email: decoded.email,
-        id: decoded.id || decoded._id || decoded.sub,
-      });
-      setStatus("authenticated");
-    } catch (err) {
-      console.error("Invalid token", err);
-      localStorage.removeItem("token");
-      setStatus("unauthenticated");
-    }
+      try {
+        const decoded = jwtDecode(token);
+
+        if (decoded.exp && decoded.exp * 1000 < Date.now()) {
+          localStorage.removeItem("token");
+          setStatus("unauthenticated");
+          return;
+        }
+
+        setUser({
+          name: decoded.name,
+          email: decoded.email,
+          id: decoded.id || decoded._id || decoded.sub,
+        });
+        setStatus("authenticated");
+      } catch (err) {
+        console.error("Invalid token", err);
+        localStorage.removeItem("token");
+        setStatus("unauthenticated");
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleSignOut = () => {
@@ -88,7 +91,7 @@ export default function DashboardUserPage() {
             Please sign in to view your profile.
           </p>
           <Link
-            href="/router/login"
+            href="/login"
             className="mt-6 inline-flex rounded-full bg-[#95D7DE] px-6 py-3 text-black font-semibold hover:bg-[#7FC5CD]"
           >
             Go to Login

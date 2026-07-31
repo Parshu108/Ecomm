@@ -15,8 +15,11 @@ export default function Sidebar() {
   const [role, setRole] = useState(null);
 
   useEffect(() => {
-    const user = getCurrentUser();
-    setRole(user?.role || null);
+    const timer = setTimeout(() => {
+      const user = getCurrentUser();
+      setRole(user?.role || null);
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const menu = [

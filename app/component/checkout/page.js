@@ -42,7 +42,7 @@ const CheckoutPage = () => {
 
   useEffect(() => {
     getCartdata();
-  }, []);
+  }, [getCartdata]);
 
   const handleBillingChange = (e) => {
     setBillingInfo({ ...billingInfo, [e.target.name]: e.target.value });

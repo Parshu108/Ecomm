@@ -104,7 +104,6 @@ function useCountUp(target, duration = 1600, start = false) {
     if (!start) return;
     const numeric = parseFloat(String(target).replace(/[^0-9.]/g, ""));
     if (isNaN(numeric)) {
-      setVal(target);
       return;
     }
     const suffix = String(target).replace(/[0-9.]/g, "");

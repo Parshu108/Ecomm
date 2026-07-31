@@ -8,11 +8,18 @@ export default function DashboardOrderPage() {
   const [order, setOrder] = useState(null);
 
   useEffect(() => {
-    const stored =
-      typeof window !== "undefined" ? localStorage.getItem("lastOrder") : null;
-    if (stored) {
-      setOrder(JSON.parse(stored));
-    }
+    const timer = setTimeout(() => {
+      const stored =
+        typeof window !== "undefined" ? localStorage.getItem("lastOrder") : null;
+      if (stored) {
+        try {
+          setOrder(JSON.parse(stored));
+        } catch (err) {
+          console.error("Error parsing order", err);
+        }
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   if (!order) {

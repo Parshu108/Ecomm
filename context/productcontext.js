@@ -123,11 +123,13 @@ export const ProductProvider = ({ children }) => {
 
 
   useEffect(() => {
-    fetchall();
-    // ✅ Sirf logged in hone pe cart load karo
-    if (session) {
-      getCartdata();
-    }
+    const initData = async () => {
+      await fetchall();
+      if (session) {
+        await getCartdata();
+      }
+    };
+    initData();
   }, [session]); // ✅ session change hone pe dobara load karo
 
   return (

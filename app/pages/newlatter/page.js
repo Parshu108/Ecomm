@@ -88,7 +88,7 @@ const NewsletterSection = () => {
             <div className="w-14 h-14 rounded-full bg-[#95D7DE]/10 border border-[#95D7DE]/40 flex items-center justify-center text-2xl text-[#95D7DE]">
               ✓
             </div>
-            <p className="text-[#EAF6F8] font-semibold text-lg">You're in!</p>
+            <p className="text-[#EAF6F8] font-semibold text-lg">You&apos;re in!</p>
             <p className="text-[#5C7285] text-sm">
               Check your inbox for a welcome email.
             </p>

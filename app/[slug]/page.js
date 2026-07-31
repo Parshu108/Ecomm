@@ -6,17 +6,16 @@ import { useProductcontext } from "../../context/productcontext";
 import Image from "next/image";
 import { CiDeliveryTruck } from "react-icons/ci";
 import { GiReturnArrow } from "react-icons/gi";
-import { FaShieldAlt } from "react-icons/fa";
+import { FaShieldAlt, FaStar, FaShoppingCart, FaBolt, FaArrowLeft } from "react-icons/fa";
 import Link from "next/link";
 
-const FALLBACK_IMAGE = "/placeholder.png"; // put a real placeholder in /public
+const FALLBACK_IMAGE = "/placeholder.png";
 
 const Page = () => {
   const params = useParams();
-  // Next.js can return slug as string or string[] — normalise it
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
 
-  const { products, addTocart } = useProductcontext();
+  const { products, addTocart, getCartdata } = useProductcontext();
 
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -26,60 +25,59 @@ const Page = () => {
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    // Wait until products have actually loaded
-    if (!products) return;
+    if (!products || products.length === 0) return;
 
-    if (products.length === 0) {
-      // Still loading from context — stay in loading state
-      return;
-    }
+    const timer = setTimeout(() => {
+      setLoading(false);
 
-    setLoading(false);
+      const found = products.find((p) => String(p._id) === String(slug));
 
-    // FIX: compare as strings; MongoDB _id may come through as an object
-    const found = products.find((p) => String(p._id) === String(slug));
+      if (!found) {
+        setNotFound(true);
+        return;
+      }
 
-    if (!found) {
-      setNotFound(true);
-      return;
-    }
+      setProduct(found);
+      setSelectedImage(found.image || FALLBACK_IMAGE);
+      setRelatedProducts(
+        products.filter(
+          (p) => p.category === found.category && String(p._id) !== String(slug)
+        )
+      );
+    }, 0);
 
-    setProduct(found);
-    setSelectedImage(found.image || FALLBACK_IMAGE);
-    setRelatedProducts(
-      products.filter(
-        (p) => p.category === found.category && String(p._id) !== String(slug),
-      ),
-    );
+    return () => clearTimeout(timer);
   }, [slug, products]);
 
-  // ── Loading state ──────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#000000]">
+      <div className="min-h-screen flex items-center justify-center bg-[#07090e]">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-9 h-9 border-2 border-[#001B38] border-t-[#95D7DE] rounded-full animate-spin" />
-          <p className="text-sm text-[#A0A0A0]">Loading product...</p>
+          <div className="w-10 h-10 border-2 border-slate-800 border-t-cyan-400 rounded-full animate-spin" />
+          <p className="text-xs font-mono tracking-widest text-slate-400 uppercase">
+            Loading Product Details...
+          </p>
         </div>
       </div>
     );
   }
 
-  // ── Not found state ────────────────────────────────────────────────────────
   if (notFound) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#000000]">
-        <div className="flex flex-col items-center gap-3 text-center">
-          <p className="text-2xl">😕</p>
-          <p className="text-[#FFFFFF] font-medium">Product not found</p>
-          <p className="text-sm text-[#A0A0A0]">
-            The product youre looking for doesnt exist or was removed.
+      <div className="min-h-screen flex items-center justify-center bg-[#07090e] px-4">
+        <div className="glass-panel p-10 rounded-3xl text-center space-y-4 max-w-md">
+          <div className="w-16 h-16 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-3xl mx-auto">
+            🔍
+          </div>
+          <h2 className="text-xl font-bold text-white">Product Not Found</h2>
+          <p className="text-xs text-slate-400">
+            The requested item might have been removed or is temporarily unavailable.
           </p>
           <Link
             href="/shop"
-            className="mt-2 text-sm font-medium text-[#95D7DE] hover:underline"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-cyan-500 text-black text-xs font-bold hover:bg-cyan-400 transition-all"
           >
-            Back to shop →
+            <FaArrowLeft /> Back to Shop Catalog
           </Link>
         </div>
       </div>
@@ -88,235 +86,224 @@ const Page = () => {
 
   if (!product) return null;
 
-  // ── Derived values ─────────────────────────────────────────────────────────
   const thumbnails =
     product.images && product.images.length > 0
       ? product.images
       : [product.image || FALLBACK_IMAGE];
 
-  const originalPrice =
-    product.originalPrice || product.mrp || Math.round(product.price * 1.4);
+  const originalPrice = Math.round(product.price * 1.35);
   const discountPercent = Math.round(
-    ((originalPrice - product.price) / originalPrice) * 100,
+    ((originalPrice - product.price) / originalPrice) * 100
   );
 
   return (
-    <div className="bg-[#000000] min-h-screen py-10">
-      <div className="max-w-6xl mx-auto px-6">
+    <div className="bg-[#07090e] min-h-screen py-10 px-4 sm:px-6 lg:px-8 text-slate-100">
+      <div className="max-w-7xl mx-auto space-y-12">
         {/* BREADCRUMB */}
-        <nav className="text-xs text-[#A0A0A0] mb-8 flex items-center gap-1.5">
-          <Link href="/" className="hover:text-[#95D7DE] transition-colors">
+        <nav className="text-xs text-slate-400 flex items-center gap-2 font-mono">
+          <Link href="/" className="hover:text-cyan-400 transition-colors">
             Home
           </Link>
           <span>/</span>
-          <Link href="/shop" className="hover:text-[#95D7DE] transition-colors">
+          <Link href="/shop" className="hover:text-cyan-400 transition-colors">
             Shop
           </Link>
           <span>/</span>
-          <span className="text-[#FFFFFF] truncate max-w-200px">
-            {product.name}
-          </span>
+          <span className="text-white truncate font-semibold">{product.name}</span>
         </nav>
 
-        {/* MAIN GRID */}
-        <div className="grid md:grid-cols-2 gap-10 mb-16">
-          {/* LEFT — IMAGES */}
-          <div>
-            <div className="bg-[#001B38] rounded-2xl p-8 flex items-center justify-center min-h-[340px]">
+        {/* MAIN DISPLAY GRID */}
+        <div className="grid lg:grid-cols-2 gap-12">
+          {/* GALLERY LEFT */}
+          <div className="space-y-4">
+            <div className="relative bg-slate-950 rounded-3xl p-8 flex items-center justify-center h-[380px] sm:h-[460px] border border-slate-800 shadow-2xl">
+              <span className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-cyan-500 text-black shadow-lg">
+                In Stock
+              </span>
               <Image
                 src={selectedImage || FALLBACK_IMAGE}
                 alt={product.name}
-                width={360}
-                height={360}
-                className="object-contain"
+                fill
+                className="object-contain p-6 transition-all duration-300"
                 unoptimized
               />
             </div>
 
-            <div className="flex gap-3 mt-4 flex-wrap">
-              {thumbnails.map((img, i) => (
-                <button
-                  key={i}
-                  onClick={() => setSelectedImage(img || FALLBACK_IMAGE)}
-                  className={`w-[68px] h-[68px] rounded-xl border bg-[#001B38] flex items-center justify-center overflow-hidden transition-all
-                    ${
+            {/* THUMBNAILS */}
+            {thumbnails.length > 1 && (
+              <div className="flex gap-3 overflow-x-auto pb-2">
+                {thumbnails.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedImage(img || FALLBACK_IMAGE)}
+                    className={`relative w-20 h-20 rounded-2xl border bg-slate-950 p-2 overflow-hidden flex-shrink-0 transition-all ${
                       selectedImage === img
-                        ? "border-[#95D7DE] ring-2 ring-[#95D7DE] ring-offset-1 ring-offset-[#000000]"
-                        : "border-[#001B38] hover:border-[#A0A0A0]"
+                        ? "border-cyan-400 ring-2 ring-cyan-400/30"
+                        : "border-slate-800 hover:border-slate-700"
                     }`}
-                >
-                  <Image
-                    src={img || FALLBACK_IMAGE}
-                    alt={`Product view ${i + 1}`}
-                    width={56}
-                    height={56}
-                    className="object-contain"
-                    unoptimized
-                  />
-                </button>
-              ))}
-            </div>
+                  >
+                    <Image
+                      src={img || FALLBACK_IMAGE}
+                      alt={`View ${i + 1}`}
+                      fill
+                      className="object-contain p-1"
+                      unoptimized
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* RIGHT — DETAILS */}
-          <div className="space-y-4">
-            <span className="inline-flex items-center gap-1.5 bg-[#001B38] text-[#95D7DE] text-xs font-medium px-3 py-1 rounded-full">
-              ✓ In stock
-            </span>
+          {/* DETAILS RIGHT */}
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <span className="text-xs font-mono tracking-widest text-cyan-400 uppercase">
+                {product.category || "Electronics"}
+              </span>
+              <h1 className="text-2xl sm:text-4xl font-extrabold text-white leading-tight">
+                {product.name}
+              </h1>
 
-            <h1 className="text-2xl font-semibold text-[#FFFFFF] leading-snug">
-              {product.name}
-            </h1>
+              {/* RATING */}
+              <div className="flex items-center gap-2 pt-1 text-amber-400 text-sm">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <FaStar key={i} />
+                  ))}
+                </div>
+                <span className="text-xs text-slate-400 font-mono ml-2">
+                  4.9 Rating · 240 Verified Reviews
+                </span>
+              </div>
+            </div>
 
-            {/* Stars */}
-            <div className="flex items-center gap-1 text-[#95D7DE] text-sm">
-              {"★★★★★".split("").map((s, i) => (
-                <span key={i}>{s}</span>
-              ))}
-              <span className="text-[#A0A0A0] text-xs ml-1.5">
-                {product.rating ?? "4.5"} · {product.reviewCount ?? 128} reviews
+            {/* PRICE BAR */}
+            <div className="glass-panel p-5 rounded-2xl border border-slate-800 flex items-center justify-between">
+              <div className="space-y-0.5">
+                <span className="text-xs text-slate-400 block font-mono uppercase">Special Offer Price</span>
+                <div className="flex items-baseline gap-3">
+                  <span className="text-3xl sm:text-4xl font-extrabold text-cyan-400 font-mono">
+                    ₹{product.price}
+                  </span>
+                  <span className="text-sm text-slate-500 line-through font-mono">
+                    ₹{originalPrice}
+                  </span>
+                </div>
+              </div>
+              <span className="px-3 py-1.5 rounded-full text-xs font-extrabold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+                Save {discountPercent}%
               </span>
             </div>
 
-            {/* Price */}
-            <div className="flex items-baseline gap-3">
-              <span className="text-3xl font-semibold text-[#FFFFFF]">
-                ₹{product.price}
-              </span>
-              <span className="text-sm text-[#A0A0A0] line-through">
-                ₹{originalPrice}
-              </span>
-              <span className="text-xs font-semibold bg-[#95D7DE] text-[#000000] px-2.5 py-0.5 rounded-full">
-                {discountPercent}% off
-              </span>
-            </div>
-
-            <hr className="border-[#001B38]" />
-
-            <p className="text-sm text-[#A0A0A0] leading-relaxed">
-              {product.description || "No description available."}
+            <p className="text-sm text-slate-300 leading-relaxed">
+              {product.description ||
+                "Engineered for high performance and daily reliability. Features ultra-low latency, premium materials, and manufacturer warranty."}
             </p>
 
-            <hr className="border-[#001B38]" />
-
-            {/* Quantity */}
-            <div>
-              <p className="text-xs uppercase tracking-widest text-[#A0A0A0] mb-2">
-                Quantity
-              </p>
-              <div className="flex items-center border border-[#001B38] rounded-xl w-fit overflow-hidden mb-5">
-                <button
-                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="w-10 h-10 bg-[#001B38] hover:bg-[#001B38]/70 text-[#FFFFFF] text-lg flex items-center justify-center transition-colors"
-                >
-                  −
-                </button>
-                <input
-                  type="number"
-                  value={quantity}
-                  min={1}
-                  onChange={(e) => {
-                    const val = parseInt(e.target.value);
-                    if (!isNaN(val) && val >= 1) setQuantity(val);
-                  }}
-                  className="w-12 h-10 text-center text-sm font-medium text-[#FFFFFF] bg-[#000000] border-x border-[#001B38] focus:outline-none"
-                />
-                <button
-                  onClick={() => setQuantity((q) => q + 1)}
-                  className="w-10 h-10 bg-[#001B38] hover:bg-[#001B38]/70 text-[#FFFFFF] text-lg flex items-center justify-center transition-colors"
-                >
-                  +
-                </button>
+            {/* QUANTITY & ACTIONS */}
+            <div className="space-y-4 pt-2">
+              <div className="flex items-center gap-4">
+                <span className="text-xs font-mono tracking-wider uppercase text-slate-400">
+                  Quantity
+                </span>
+                <div className="flex items-center border border-slate-800 rounded-xl bg-slate-900 overflow-hidden">
+                  <button
+                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                    className="w-10 h-10 text-white font-bold hover:bg-slate-800 transition-colors flex items-center justify-center"
+                  >
+                    −
+                  </button>
+                  <span className="w-12 text-center text-sm font-bold font-mono text-cyan-400">
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={() => setQuantity((q) => q + 1)}
+                    className="w-10 h-10 text-white font-bold hover:bg-slate-800 transition-colors flex items-center justify-center"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
 
-              <div className="flex gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <button
-                  onClick={() => addTocart(product._id, quantity)}
-                  className="flex-1 flex items-center justify-center gap-2 bg-[#001B38] hover:bg-[#001B38]/70 text-[#95D7DE] py-3 rounded-xl text-sm font-medium transition-colors"
+                  onClick={() => {
+                    addTocart(product.name, product.image, product.price);
+                    getCartdata();
+                  }}
+                  className="flex items-center justify-center gap-2 py-3.5 rounded-xl bg-slate-900 border border-slate-700 text-cyan-400 text-sm font-bold hover:bg-cyan-500 hover:text-black hover:border-cyan-400 transition-all duration-200"
                 >
-                  🛒 Add to cart
+                  <FaShoppingCart /> Add to Cart
                 </button>
-                <button className="flex-1 flex items-center justify-center gap-2 bg-[#95D7DE] hover:opacity-90 text-[#000000] py-3 rounded-xl text-sm font-semibold transition-colors">
-                  ⚡ Buy now
-                </button>
+                <Link
+                  href="/cart"
+                  onClick={() => {
+                    addTocart(product.name, product.image, product.price);
+                    getCartdata();
+                  }}
+                  className="flex items-center justify-center gap-2 py-3.5 rounded-xl bg-cyan-500 text-black text-sm font-extrabold hover:bg-cyan-400 transition-all duration-200 shadow-[0_0_20px_rgba(6,182,212,0.3)]"
+                >
+                  <FaBolt /> Buy Now
+                </Link>
               </div>
             </div>
 
-            {/* Trust badges */}
-            <div className="flex gap-4 pt-1 flex-wrap">
-              {[
-                { icon: <CiDeliveryTruck />, text: "Free delivery" },
-                { icon: <GiReturnArrow />, text: "7-day returns" },
-                { icon: <FaShieldAlt />, text: "1-year warranty" },
-              ].map(({ icon, text }) => (
-                <span
-                  key={text}
-                  className="flex items-center gap-1.5 text-xs text-[#A0A0A0]"
-                >
-                  {icon} {text}
-                </span>
-              ))}
+            {/* TRUST GUARANTEES */}
+            <div className="grid grid-cols-3 gap-3 pt-4 border-t border-slate-800">
+              <div className="flex flex-col items-center text-center p-3 rounded-xl bg-slate-950/60 border border-slate-800/80">
+                <CiDeliveryTruck className="text-2xl text-cyan-400 mb-1" />
+                <span className="text-[11px] font-bold text-white">Free Express</span>
+                <span className="text-[10px] text-slate-400">Delivery in 48h</span>
+              </div>
+              <div className="flex flex-col items-center text-center p-3 rounded-xl bg-slate-950/60 border border-slate-800/80">
+                <GiReturnArrow className="text-2xl text-cyan-400 mb-1" />
+                <span className="text-[11px] font-bold text-white">7 Days Return</span>
+                <span className="text-[10px] text-slate-400">Instant Refund</span>
+              </div>
+              <div className="flex flex-col items-center text-center p-3 rounded-xl bg-slate-950/60 border border-slate-800/80">
+                <FaShieldAlt className="text-2xl text-cyan-400 mb-1" />
+                <span className="text-[11px] font-bold text-white">1 Year Warranty</span>
+                <span className="text-[10px] text-slate-400">Official Brand</span>
+              </div>
             </div>
           </div>
         </div>
 
         {/* RELATED PRODUCTS */}
-        <div>
-          <div className="flex items-center gap-4 mb-6">
-            <h2 className="text-base font-semibold text-[#FFFFFF] whitespace-nowrap">
-              Related products
-            </h2>
-            <div className="flex-1 h-px bg-[#001B38]" />
-          </div>
-
-          {relatedProducts.length === 0 ? (
-            <p className="text-sm text-[#A0A0A0]">No related products found.</p>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {relatedProducts.length > 0 && (
+          <div className="space-y-6 pt-10 border-t border-slate-800">
+            <h2 className="text-2xl font-extrabold text-white">Related Tech Products</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {relatedProducts.map((item) => (
-                <Link key={String(item._id)} href={`/product/${item._id}`}>
-                  <div className="bg-[#001B38] rounded-2xl overflow-hidden group hover:ring-1 hover:ring-[#95D7DE] transition-all cursor-pointer">
-                    <div className="bg-[#000000] p-4 flex items-center justify-center h-[200px]">
-                      <Image
-                        src={item.image || FALLBACK_IMAGE}
-                        alt={item.name}
-                        width={200}
-                        height={200}
-                        className="object-contain transition-transform duration-300 group-hover:scale-105"
-                        unoptimized
-                      />
-                    </div>
-                    <div className="p-3">
-                      <h3 className="text-xs font-medium text-[#FFFFFF] truncate mb-0.5">
-                        {item.name}
-                      </h3>
-                      <p className="text-sm font-semibold text-[#95D7DE] mb-3">
-                        ₹{item.price}
-                      </p>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            addTocart(item._id, 1);
-                          }}
-                          className="flex-1 bg-[#000000] hover:bg-[#000000]/70 text-[#95D7DE] text-xs font-medium py-2 rounded-lg transition-colors"
-                        >
-                          Add to cart
-                        </button>
-                        <button
-                          onClick={(e) => e.preventDefault()}
-                          className="flex-1 bg-[#95D7DE] hover:opacity-90 text-[#000000] text-xs font-semibold py-2 rounded-lg transition-colors"
-                        >
-                          Buy now
-                        </button>
-                      </div>
-                    </div>
+                <div
+                  key={item._id}
+                  className="glass-panel p-4 rounded-2xl border border-slate-800 hover:border-cyan-500/50 transition-all flex items-center gap-4"
+                >
+                  <div className="relative w-20 h-20 bg-slate-950 rounded-xl flex-shrink-0 p-2">
+                    <Image
+                      src={item.image || FALLBACK_IMAGE}
+                      alt={item.name}
+                      fill
+                      className="object-contain p-1"
+                      unoptimized
+                    />
                   </div>
-                </Link>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-sm font-bold text-white truncate">{item.name}</h3>
+                    <p className="text-xs text-cyan-400 font-mono font-bold mt-0.5">₹{item.price}</p>
+                    <Link
+                      href={`/${item._id}`}
+                      className="text-[11px] text-slate-400 hover:text-cyan-400 mt-1 inline-block"
+                    >
+                      View Details →
+                    </Link>
+                  </div>
+                </div>
               ))}
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
