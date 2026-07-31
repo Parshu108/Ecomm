@@ -19,13 +19,55 @@ const CATEGORIES = [
   { label: "Headphones & Audio", value: "headphone" },
   { label: "Smartwatches", value: "watch" },
   { label: "Accessories", value: "remote" },
+  { label: "Laptops", value: "laptop" },
+  { label: "Projectors", value: "projector" },
 ];
 
+// The API is inconsistent about the category field: some products use the
+// key "category", but most actually use "category " (a trailing space),
+// so item.category was undefined for most rows and they silently dropped
+// out of every category filter. This also normalizes known typo values
+// ("mackbok", "laptp", "projectr", etc.) onto the real category buckets
+// used by CATEGORIES above, so those products stay filterable instead of
+// only ever showing under "All Products".
+const CATEGORY_ALIASES = {
+  mackbok: "laptop",
+  macbook: "laptop",
+  laptp: "laptop",
+  projectr: "projector",
+  earphone: "headphone",
+};
+
+function getProductCategory(item) {
+  const raw = (item.category ?? item["category "] ?? "").trim().toLowerCase();
+  return CATEGORY_ALIASES[raw] ?? raw;
+}
+
+// Same class of bug as category: this API has already shown it stores
+// fields under inconsistent keys (e.g. "category " with a trailing
+// space) and the price could just as easily arrive as "price " or as a
+// string like "₹1,399" / " 1399 " instead of a clean number. A raw
+// `item.price` comparison would silently break (NaN comparisons are
+// always false) or just skip mis-keyed rows the same way category did.
+// This normalizer reads either key and coerces to a real number.
+function getProductPrice(item) {
+  const raw = item.price ?? item["price "] ?? 0;
+  if (typeof raw === "number") return raw;
+  const num = parseFloat(String(raw).replace(/[^0-9.]/g, ""));
+  return Number.isNaN(num) ? 0 : num;
+}
+
+// Each tier carries explicit min/max bounds (inclusive). These must be
+// contiguous with no gaps, or any product priced in a gap (e.g. ₹1,399)
+// will never match a specific tier and only ever show under "All Prices" —
+// which is exactly what was happening between the old ₹999 and ₹10,000
+// boundaries. Bounds below are chosen so every product price lands in
+// exactly one specific tier.
 const PRICE_TIERS = [
-  { label: "All Prices", price: 0 },
-  { label: "Under ₹5,000", price: 1000 },
-  { label: "₹5,000 - ₹20,000", price: 10000 },
-  { label: "Premium (≥ ₹40,000)", price: 40000 },
+  { label: "All Prices", min: 0, max: Infinity },
+  { label: "₹1,000 - ₹10,000", min: 1000, max: 9999 },
+  { label: "₹10,000 - ₹40,000", min: 10000, max: 39999 },
+  { label: "Premium (₹40,000+)", min: 40000, max: Infinity },
 ];
 
 export default function ProductsPage() {
@@ -34,7 +76,7 @@ export default function ProductsPage() {
   const [filtered, setFiltered] = useState([]);
   const [input, setInput] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
-  const [activePrice, setActivePrice] = useState(0);
+  const [activePrice, setActivePrice] = useState(PRICE_TIERS[0]);
 
   const { addTocart, getCartdata } = useProductcontext();
 
@@ -67,20 +109,24 @@ export default function ProductsPage() {
 
   const filterProducts = (
     category = activeCategory,
-    price = activePrice,
+    priceTier = activePrice,
     searchQuery = input,
   ) => {
     let result = [...products];
 
     if (category && category !== "All") {
       result = result.filter(
-        (item) => item.category?.toLowerCase() === category.toLowerCase(),
+        (item) => getProductCategory(item) === category.toLowerCase(),
       );
     }
 
-    if (price > 0) {
-      result = result.filter((item) => item.price >= price);
-    }
+    // Single, unambiguous comparison: price must fall within
+    // [min, max] inclusive. "All Prices" uses 0..Infinity so this
+    // branch is a no-op for it without needing a special case.
+    result = result.filter((item) => {
+      const price = getProductPrice(item);
+      return price >= priceTier.min && price <= priceTier.max;
+    });
 
     if (searchQuery.trim()) {
       result = result.filter((item) =>
@@ -96,9 +142,9 @@ export default function ProductsPage() {
     filterProducts(val, activePrice, input);
   };
 
-  const handlePriceSelect = (priceVal) => {
-    setActivePrice(priceVal);
-    filterProducts(activeCategory, priceVal, input);
+  const handlePriceSelect = (tier) => {
+    setActivePrice(tier);
+    filterProducts(activeCategory, tier, input);
   };
 
   const handleSearchChange = (val) => {
@@ -193,17 +239,17 @@ export default function ProductsPage() {
                 Price Tier
               </span>
               <div className="flex flex-wrap gap-2">
-                {PRICE_TIERS.map(({ label, price }) => (
+                {PRICE_TIERS.map((tier) => (
                   <button
-                    key={label}
-                    onClick={() => handlePriceSelect(price)}
+                    key={tier.label}
+                    onClick={() => handlePriceSelect(tier)}
                     className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                      activePrice === price
+                      activePrice.label === tier.label
                         ? "bg-cyan-500 text-black shadow-[0_0_12px_rgba(6,182,212,0.3)]"
                         : "bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700"
                     }`}
                   >
-                    {label}
+                    {tier.label}
                   </button>
                 ))}
               </div>
@@ -220,7 +266,7 @@ export default function ProductsPage() {
             <button
               onClick={() => {
                 setActiveCategory("All");
-                setActivePrice(0);
+                setActivePrice(PRICE_TIERS[0]);
                 setInput("");
                 setFiltered(products);
               }}
