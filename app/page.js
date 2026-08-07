@@ -55,7 +55,7 @@ export default function Home() {
     getPost();
   }, []);
 
-  const categories = ["All", "Audio", "Wearables", "Laptops", "Accessories"];
+  const categories = ["All", "Wearables", "Laptop", "Accessories"];
 
   const displayedProducts =
     filteredCategory === "All"
