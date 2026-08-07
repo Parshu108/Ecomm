@@ -55,13 +55,24 @@ export default function Home() {
     getPost();
   }, []);
 
-  const categories = ["All", "Wearables", "Laptop", "Accessories"];
+  // Build the pill list from whatever categories actually exist in the
+  // fetched data, instead of a hardcoded list that can drift out of sync
+  // with the real values coming back from the API (different casing,
+  // extra whitespace, categories that were added/removed in the DB, etc).
+  const categories = [
+    "All",
+    ...Array.from(
+      new Set(products.map((p) => p.category?.trim()).filter(Boolean)),
+    ),
+  ];
+
+  const normalize = (val) => val?.trim().toLowerCase();
 
   const displayedProducts =
     filteredCategory === "All"
       ? products
       : products.filter(
-          (p) => p.category?.toLowerCase() === filteredCategory.toLowerCase(),
+          (p) => normalize(p.category) === normalize(filteredCategory),
         );
 
   return (
@@ -253,7 +264,7 @@ export default function Home() {
                 key={cat}
                 onClick={() => setFilteredCategory(cat)}
                 className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 ${
-                  filteredCategory === cat
+                  normalize(filteredCategory) === normalize(cat)
                     ? "bg-cyan-500 text-black shadow-[0_0_15px_rgba(6,182,212,0.3)]"
                     : "bg-slate-900 text-slate-400 hover:text-white border border-slate-800"
                 }`}
