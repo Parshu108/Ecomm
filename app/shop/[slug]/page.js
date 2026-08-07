@@ -1,11 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import product from "@/model/product";
-import ProductActions from "./productaction"; // new client component below
 
 export async function generateMetadata({ params }) {
-  const { slug } = await params; // ✅ await params in Next.js 15
-  const prod = await product.findOne({ slug }).lean();
+  const prod = await product.findOne({ slug: params.slug }).lean();
 
   return {
     title: prod?.name,
@@ -14,8 +12,7 @@ export async function generateMetadata({ params }) {
 }
 
 const page = async ({ params }) => {
-  const { slug } = await params; // ✅ await params here too
-  const prod = await product.findOne({ slug }).lean();
+  const prod = await product.findOne({ slug: params.slug }).lean();
 
   if (!prod) {
     return (
@@ -49,20 +46,22 @@ const page = async ({ params }) => {
         </nav>
       </div>
 
+      {/* Product Panel */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10">
+        {/* IMAGE */}
         <div className="bg-[#001B38] rounded-2xl p-8 flex items-center justify-center h-[420px]">
           <div className="relative w-full h-full">
             <Image
               src={prod.image || "/fallback.png"}
               alt={prod.name}
               fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-contain"
               unoptimized
             />
           </div>
         </div>
 
+        {/* DETAILS */}
         <div className="flex flex-col">
           {prod.category && (
             <span className="text-xs uppercase tracking-widest text-[#95D7DE] mb-3">
@@ -74,11 +73,13 @@ const page = async ({ params }) => {
             {prod.name}
           </h1>
 
+          {/* Rating */}
           <div className="flex items-center mt-3 text-sm">
             <span className="text-[#95D7DE]">⭐⭐⭐⭐☆</span>
             <span className="text-[#A0A0A0] ml-2">(120 reviews)</span>
           </div>
 
+          {/* Price */}
           <div className="mt-6 flex items-baseline gap-3">
             <span className="text-4xl font-bold text-[#95D7DE]">
               ₹{prod.price}
@@ -91,20 +92,24 @@ const page = async ({ params }) => {
             </span>
           </div>
 
+          {/* Description */}
           <p className="mt-6 text-[#A0A0A0] leading-relaxed">
             {prod.description}
           </p>
 
           <div className="h-px bg-[#001B38] my-8" />
 
-          {/* ✅ Now a working client component instead of dead buttons */}
-          <ProductActions
-            id={prod._id.toString()}
-            name={prod.name}
-            image={prod.image}
-            price={prod.price}
-          />
+          {/* Actions */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button className="flex-1 bg-[#95D7DE] hover:opacity-90 text-[#000000] font-semibold py-3.5 rounded-xl transition">
+              Add to Cart
+            </button>
+            <button className="flex-1 bg-[#001B38] hover:bg-[#001B38]/70 text-[#FFFFFF] font-semibold py-3.5 rounded-xl transition">
+              Buy Now
+            </button>
+          </div>
 
+          {/* Meta */}
           <div className="mt-8 grid grid-cols-2 gap-4 text-xs text-[#A0A0A0]">
             <div className="flex items-center gap-2">
               <span className="text-[#95D7DE]">●</span> In stock
@@ -116,6 +121,7 @@ const page = async ({ params }) => {
         </div>
       </div>
 
+      {/* Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
