@@ -1,6 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import product from "@/model/product";
+import WishlistButton from "@/components/WishlistButton";
+import RelatedProducts from "@/components/RelatedProducts";
+import ProductReviewSection from "@/components/ProductReviewSection";
 
 export async function generateMetadata({ params }) {
   const prod = await product.findOne({ slug: params.slug }).lean();
@@ -24,6 +27,8 @@ const page = async ({ params }) => {
     );
   }
 
+  const plainId = prod._id ? prod._id.toString() : "";
+
   return (
     <div className="min-h-screen bg-[#000000] px-6 py-10">
       {/* Breadcrumb */}
@@ -34,7 +39,7 @@ const page = async ({ params }) => {
           </Link>
           <span>/</span>
           <Link
-            href="/products"
+            href="/shop"
             className="hover:text-[#95D7DE] transition-colors"
           >
             Products
@@ -49,7 +54,10 @@ const page = async ({ params }) => {
       {/* Product Panel */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10">
         {/* IMAGE */}
-        <div className="bg-[#001B38] rounded-2xl p-8 flex items-center justify-center h-[420px]">
+        <div className="bg-[#001B38] rounded-2xl p-8 flex items-center justify-center h-[420px] relative">
+          <div className="absolute top-4 right-4 z-10">
+            <WishlistButton productId={plainId} />
+          </div>
           <div className="relative w-full h-full">
             <Image
               src={prod.image || "/fallback.png"}
@@ -75,8 +83,12 @@ const page = async ({ params }) => {
 
           {/* Rating */}
           <div className="flex items-center mt-3 text-sm">
-            <span className="text-[#95D7DE]">⭐⭐⭐⭐☆</span>
-            <span className="text-[#A0A0A0] ml-2">(120 reviews)</span>
+            <span className="text-[#95D7DE]">
+              {"⭐".repeat(Math.round(prod.rating || 5))}
+            </span>
+            <span className="text-[#A0A0A0] ml-2">
+              ({prod.rating || 4.5} rating, {prod.numReviews || 0} reviews)
+            </span>
           </div>
 
           {/* Price */}
@@ -112,13 +124,23 @@ const page = async ({ params }) => {
           {/* Meta */}
           <div className="mt-8 grid grid-cols-2 gap-4 text-xs text-[#A0A0A0]">
             <div className="flex items-center gap-2">
-              <span className="text-[#95D7DE]">●</span> In stock
+              <span className="text-[#95D7DE]">●</span> In stock ({prod.stock || 15} available)
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[#95D7DE]">●</span> Free delivery
+              <span className="text-[#95D7DE]">●</span> Free delivery & COD option
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Customer Reviews */}
+      <div className="max-w-6xl mx-auto mt-14">
+        <ProductReviewSection productId={plainId} />
+      </div>
+
+      {/* Related Products */}
+      <div className="max-w-6xl mx-auto mt-14">
+        <RelatedProducts currentProductId={plainId} category={prod.category} />
       </div>
 
       {/* Structured Data */}

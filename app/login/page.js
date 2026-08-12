@@ -45,7 +45,7 @@ export default function LoginPage() {
       }
 
       localStorage.setItem("token", data.token);
-      router.push("/dashboard");
+      router.push("/admin");
     } catch (err) {
       setError("Something went wrong, please try again");
       setLoading(false);

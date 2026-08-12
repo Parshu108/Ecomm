@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FaShoppingCart,
   FaUser,
@@ -14,12 +14,14 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useProductcontext } from "@/context/productcontext";
 
+
 const Navbar = () => {
   const pathname = usePathname();
   const { cart, products } = useProductcontext();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const cartCount = Array.isArray(cart)
     ? cart.reduce((sum, item) => sum + (item.qty || 1), 0)
@@ -43,7 +45,9 @@ const Navbar = () => {
           )
           .slice(0, 5)
       : [];
-
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   return (
     <header className="sticky top-0 z-50 w-full glass-panel border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl">
       <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">

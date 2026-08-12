@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { useProductcontext } from "../../context/productcontext";
 import {
   FaTrashAlt,
@@ -9,6 +10,7 @@ import {
   FaArrowLeft,
   FaShoppingBag,
   FaTag,
+  FaCheckCircle,
 } from "react-icons/fa";
 
 const CartPages = () => {
@@ -20,10 +22,45 @@ const CartPages = () => {
     decreaseQty,
   } = useProductcontext();
 
-  const total = cart.reduce(
+  // Coupon state
+  const [couponCode, setCouponCode] = useState("");
+  const [discount, setDiscount] = useState(0);
+  const [appliedCoupon, setAppliedCoupon] = useState("");
+  const [couponMsg, setCouponMsg] = useState(null);
+  const [couponError, setCouponError] = useState(null);
+
+  const subtotal = cart.reduce(
     (acc, item) => acc + item.price * (item.qty || 1),
-    0,
+    0
   );
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode) return;
+    setCouponMsg(null);
+    setCouponError(null);
+
+    try {
+      const res = await fetch("/api/coupons/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: couponCode, cartSubtotal: subtotal }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setDiscount(data.discount);
+        setAppliedCoupon(data.code);
+        setCouponMsg(data.message);
+      } else {
+        setCouponError(data.message);
+        setDiscount(0);
+        setAppliedCoupon("");
+      }
+    } catch (err) {
+      setCouponError("Failed to apply coupon");
+    }
+  };
+
+  const finalTotal = Math.max(0, subtotal - discount);
 
   if (!cart || cart.length === 0) {
     return (
@@ -157,8 +194,14 @@ const CartPages = () => {
               </div>
               <div className="flex justify-between text-slate-400">
                 <span>Subtotal</span>
-                <span className="text-white font-mono">₹{total}</span>
+                <span className="text-white font-mono">₹{subtotal}</span>
               </div>
+              {discount > 0 && (
+                <div className="flex justify-between text-emerald-400 font-bold">
+                  <span>Coupon Discount ({appliedCoupon})</span>
+                  <span className="font-mono">-₹{discount}</span>
+                </div>
+              )}
               <div className="flex justify-between text-slate-400">
                 <span>Shipping Fee</span>
                 <span className="text-cyan-400 font-mono font-bold">FREE</span>
@@ -166,18 +209,32 @@ const CartPages = () => {
             </div>
 
             {/* PROMO CODE */}
-            <div className="pt-2">
+            <div className="pt-2 space-y-2">
               <div className="relative flex items-center">
                 <FaTag className="absolute left-3 text-slate-500 text-xs" />
                 <input
                   type="text"
-                  placeholder="Promo code"
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-16 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
+                  placeholder="Promo code (e.g. WELCOME10)"
+                  value={couponCode}
+                  onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                  className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-20 py-2.5 text-xs text-white placeholder-slate-500 uppercase font-mono focus:outline-none focus:border-cyan-400"
                 />
-                <button className="absolute right-1 px-3 py-1.5 rounded-lg bg-slate-800 text-cyan-400 text-[11px] font-bold hover:bg-slate-700">
+                <button
+                  onClick={handleApplyCoupon}
+                  className="absolute right-1 px-3 py-1.5 rounded-lg bg-cyan-500 text-black text-[11px] font-extrabold hover:bg-cyan-400"
+                >
                   Apply
                 </button>
               </div>
+
+              {couponMsg && (
+                <p className="text-xs text-emerald-400 flex items-center gap-1 font-semibold">
+                  <FaCheckCircle className="text-xs" /> {couponMsg}
+                </p>
+              )}
+              {couponError && (
+                <p className="text-xs text-rose-400 font-semibold">{couponError}</p>
+              )}
             </div>
 
             <div className="border-t border-slate-800/80 pt-4 flex justify-between items-center">
@@ -185,12 +242,12 @@ const CartPages = () => {
                 Total Amount
               </span>
               <span className="text-xl sm:text-2xl font-extrabold text-cyan-400 font-mono">
-                ₹{total}
+                ₹{finalTotal}
               </span>
             </div>
 
             <Link
-              href="/component/checkout"
+              href={`/component/checkout?coupon=${appliedCoupon}&discount=${discount}`}
               className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-cyan-500 text-black text-sm font-extrabold hover:bg-cyan-400 active:bg-cyan-300 transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)]"
             >
               <FaLock className="text-xs" /> Proceed to Checkout
@@ -198,7 +255,7 @@ const CartPages = () => {
 
             <p className="text-[10px] sm:text-[11px] text-slate-500 text-center flex items-center justify-center gap-1.5">
               <FaLock className="text-cyan-400" />
-              256-Bit SSL Encrypted Razorpay Checkout
+              256-Bit SSL Encrypted Razorpay & COD Checkout
             </p>
           </div>
         </div>

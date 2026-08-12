@@ -7,7 +7,7 @@ export default function middleware(req) {
   const isLoggedIn = !!req.auth;
 
   const publicPaths = ["/login", "/register"];
-  const publicApiPaths = ["/api/auth", "/api/register"];
+  const publicApiPaths = ["/api/users", "/api/register"];
 
   const isPublic = publicPaths.some((p) => pathname.startsWith(p));
   const isPublicApi = publicApiPaths.some((p) => pathname.startsWith(p));
