@@ -1,6 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import { Upload, Download, CheckCircle2, AlertCircle, FileText } from "lucide-react";
+import {
+  Upload,
+  Download,
+  CheckCircle2,
+  AlertCircle,
+  FileText,
+} from "lucide-react";
 
 export default function AdminBulkUploadPage() {
   const [parsedProducts, setParsedProducts] = useState([]);
@@ -30,7 +36,10 @@ export default function AdminBulkUploadPage() {
     const reader = new FileReader();
     reader.onload = (evt) => {
       const text = evt.target.result;
-      const lines = text.split("\n").map((line) => line.trim()).filter(Boolean);
+      const lines = text
+        .split("\n")
+        .map((line) => line.trim())
+        .filter(Boolean);
       if (lines.length <= 1) return;
 
       const headers = lines[0].split(",").map((h) => h.trim().toLowerCase());
@@ -76,17 +85,19 @@ export default function AdminBulkUploadPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+    <div className="space-y-6 bg-background">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card p-6 rounded-2xl shadow-sm border border-border">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Bulk Product CSV Importer</h1>
-          <p className="text-slate-500 text-sm mt-1">
+          <h1 className="text-2xl font-bold text-foreground">
+            Bulk Product CSV Importer
+          </h1>
+          <p className="text-muted-foreground text-sm mt-1">
             Import hundreds of catalog products at once using a CSV spreadsheet
           </p>
         </div>
         <button
           onClick={downloadSampleCSV}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-semibold transition"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-xl text-sm font-semibold transition border border-border"
         >
           <Download className="w-4 h-4" />
           Download CSV Template
@@ -94,42 +105,50 @@ export default function AdminBulkUploadPage() {
       </div>
 
       {/* Upload Zone */}
-      <div className="bg-white p-8 rounded-2xl shadow-sm border-2 border-dashed border-slate-300 text-center space-y-4">
-        <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto">
+      <div className="bg-card p-8 rounded-2xl shadow-sm border-2 border-dashed border-border text-center space-y-4">
+        <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto">
           <Upload className="w-8 h-8" />
         </div>
         <div>
-          <h3 className="font-bold text-slate-900 text-lg">Select CSV File to Import</h3>
-          <p className="text-xs text-slate-400 mt-1">
-            File should include headers: name, price, category, stock, description, image
+          <h3 className="font-bold text-foreground text-lg">
+            Select CSV File to Import
+          </h3>
+          <p className="text-xs text-muted-foreground mt-1">
+            File should include headers: name, price, category, stock,
+            description, image
           </p>
         </div>
 
-        <label className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl cursor-pointer shadow-md shadow-indigo-600/20 transition">
+        <label className="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:opacity-90 text-primary-foreground font-semibold text-sm rounded-xl cursor-pointer shadow-md shadow-primary/20 transition">
           <FileText className="w-4 h-4" />
           Choose CSV File
-          <input type="file" accept=".csv" onChange={handleFileUpload} className="hidden" />
+          <input
+            type="file"
+            accept=".csv"
+            onChange={handleFileUpload}
+            className="hidden"
+          />
         </label>
       </div>
 
       {successMessage && (
-        <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-xl flex items-center gap-3">
-          <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+        <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 p-4 rounded-xl flex items-center gap-3">
+          <CheckCircle2 className="w-5 h-5 text-emerald-400" />
           <span className="font-bold text-sm">{successMessage}</span>
         </div>
       )}
 
       {/* CSV Preview Table */}
       {parsedProducts.length > 0 && (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden space-y-4 p-6">
+        <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden space-y-4 p-6">
           <div className="flex items-center justify-between">
-            <h3 className="font-bold text-slate-900 text-lg">
+            <h3 className="font-bold text-foreground text-lg">
               Preview Parsed Products ({parsedProducts.length})
             </h3>
             <button
               onClick={handleBatchImport}
               disabled={loading}
-              className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-bold shadow-md shadow-emerald-600/20 transition disabled:opacity-50"
+              className="flex items-center gap-2 px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-black rounded-xl text-sm font-bold shadow-md shadow-emerald-500/20 transition disabled:opacity-50"
             >
               {loading ? "Importing..." : "Confirm & Import Catalog"}
             </button>
@@ -138,7 +157,7 @@ export default function AdminBulkUploadPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50 text-slate-400 uppercase text-[11px] font-bold tracking-wider border-b border-slate-100">
+                <tr className="bg-secondary/50 text-muted-foreground uppercase text-[11px] font-bold tracking-wider border-b border-border">
                   <th className="py-3 px-4">Name</th>
                   <th className="py-3 px-4">Price</th>
                   <th className="py-3 px-4">Category</th>
@@ -146,14 +165,22 @@ export default function AdminBulkUploadPage() {
                   <th className="py-3 px-4">Description</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-xs font-medium text-slate-700">
+              <tbody className="divide-y divide-border text-xs font-medium text-foreground/90">
                 {parsedProducts.map((p, idx) => (
-                  <tr key={idx} className="hover:bg-slate-50">
-                    <td className="py-3 px-4 font-bold text-slate-900">{p.name}</td>
-                    <td className="py-3 px-4 font-bold text-emerald-700">₹{p.price}</td>
-                    <td className="py-3 px-4 uppercase">{p.category || "general"}</td>
+                  <tr key={idx} className="hover:bg-secondary/40">
+                    <td className="py-3 px-4 font-bold text-foreground">
+                      {p.name}
+                    </td>
+                    <td className="py-3 px-4 font-bold text-emerald-400">
+                      ₹{p.price}
+                    </td>
+                    <td className="py-3 px-4 uppercase">
+                      {p.category || "general"}
+                    </td>
                     <td className="py-3 px-4 font-mono">{p.stock || 15}</td>
-                    <td className="py-3 px-4 text-slate-400 truncate max-w-xs">{p.description}</td>
+                    <td className="py-3 px-4 text-muted-foreground truncate max-w-xs">
+                      {p.description}
+                    </td>
                   </tr>
                 ))}
               </tbody>

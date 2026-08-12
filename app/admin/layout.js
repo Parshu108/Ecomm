@@ -34,18 +34,24 @@ export default function AdminLayout({ children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row font-sans">
+    <div className="min-h-screen bg-background flex flex-col md:flex-row font-sans">
       {/* Mobile Top Navbar */}
-      <div className="md:hidden bg-slate-900 text-white p-4 flex items-center justify-between shadow-md">
+      <div className="md:hidden bg-card text-foreground p-4 flex items-center justify-between border-b border-border shadow-sm">
         <div className="flex items-center gap-2">
-          <ShieldAlert className="text-indigo-400 w-6 h-6" />
-          <span className="font-bold text-lg tracking-wide">NextEcom Admin</span>
+          <ShieldAlert className="text-primary w-6 h-6" />
+          <span className="font-bold text-lg tracking-wide">
+            NextEcom Admin
+          </span>
         </div>
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-1 rounded-md text-slate-300 hover:text-white hover:bg-slate-800"
+          className="p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition"
         >
-          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          {mobileMenuOpen ? (
+            <X className="w-6 h-6" />
+          ) : (
+            <Menu className="w-6 h-6" />
+          )}
         </button>
       </div>
 
@@ -53,17 +59,21 @@ export default function AdminLayout({ children }) {
       <aside
         className={`${
           mobileMenuOpen ? "block" : "hidden"
-        } md:block w-full md:w-64 bg-slate-900 text-slate-300 flex-shrink-0 min-h-screen p-5 flex flex-col justify-between border-r border-slate-800`}
+        } md:block w-full md:w-64 bg-card text-muted-foreground flex-shrink-0 min-h-screen p-5 flex flex-col justify-between border-r border-border`}
       >
         <div>
           {/* Logo Brand */}
-          <div className="hidden md:flex items-center gap-3 pb-6 border-b border-slate-800">
-            <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-600/30">
+          <div className="hidden md:flex items-center gap-3 pb-6 border-b border-border">
+            <div className="bg-primary p-2 rounded-xl text-primary-foreground shadow-lg shadow-primary/30">
               <ShieldAlert className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="font-bold text-white text-lg tracking-tight">NextEcom</h1>
-              <p className="text-xs text-indigo-400 font-medium">Control Center v2.0</p>
+              <h1 className="font-bold text-foreground text-lg tracking-tight">
+                NextEcom
+              </h1>
+              <p className="text-xs text-primary font-medium">
+                Control Center v2.0
+              </p>
             </div>
           </div>
 
@@ -79,11 +89,13 @@ export default function AdminLayout({ children }) {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 ${
                     isActive
-                      ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30"
-                      : "text-slate-400 hover:text-slate-100 hover:bg-slate-800/60"
+                      ? "bg-primary text-primary-foreground shadow-md shadow-primary/30"
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
                   }`}
                 >
-                  <Icon className={`w-5 h-5 ${isActive ? "text-white" : "text-slate-400"}`} />
+                  <Icon
+                    className={`w-5 h-5 ${isActive ? "text-primary-foreground" : "text-muted-foreground"}`}
+                  />
                   <span>{item.name}</span>
                 </Link>
               );
@@ -92,10 +104,10 @@ export default function AdminLayout({ children }) {
         </div>
 
         {/* Footer Link back to store */}
-        <div className="pt-6 border-t border-slate-800 mt-6">
+        <div className="pt-6 border-t border-border mt-6">
           <Link
             href="/shop"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-secondary transition"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Return to Live Store</span>
@@ -104,7 +116,7 @@ export default function AdminLayout({ children }) {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+      <main className="flex-1 p-4 md:p-8 overflow-y-auto bg-background">
         {children}
       </main>
     </div>
