@@ -17,7 +17,48 @@ export async function GET(req) {
   } catch (err) {
     return NextResponse.json(
       { success: false, message: err.message },
-      { status: 500 }
+      { status: 500 },
+    );
+  }
+}
+
+// POST create a new order (used by checkout page, e.g. Cash on Delivery)
+export async function POST(req) {
+  try {
+    await connectDB();
+    const body = await req.json();
+    const { orderId, ...orderData } = body;
+
+    // "orderId" from the client (e.g. "NEW_COD") is just a flag telling us
+    // this is a brand-new order — Mongo will generate the real _id.
+    const newOrder = await Order.create(orderData);
+
+    // Fire off a confirmation email if we have a customer email on file
+    const customerEmail =
+      newOrder.shippingInfo?.email || newOrder.billingInfo?.email;
+
+    if (customerEmail) {
+      try {
+        await sendOrderEmail({
+          to: customerEmail,
+          subject: `Order Confirmation: Your Order #${newOrder._id} has been received`,
+          order: newOrder,
+        });
+      } catch (emailErr) {
+        // Don't fail the whole order just because the email failed to send
+        console.error("Order confirmation email failed:", emailErr);
+      }
+    }
+
+    return NextResponse.json(
+      { success: true, message: "Order created ✅", order: newOrder },
+      { status: 201 },
+    );
+  } catch (err) {
+    console.error("Order creation failed:", err);
+    return NextResponse.json(
+      { success: false, message: err.message },
+      { status: 500 },
     );
   }
 }
@@ -31,7 +72,7 @@ export async function PUT(req) {
     if (!orderId) {
       return NextResponse.json(
         { success: false, message: "Order ID required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -46,14 +87,13 @@ export async function PUT(req) {
     if (!updatedOrder) {
       return NextResponse.json(
         { success: false, message: "Order not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     // Send email notification to customer if email is present
     const customerEmail =
-      updatedOrder.shippingInfo?.email ||
-      updatedOrder.billingInfo?.email;
+      updatedOrder.shippingInfo?.email || updatedOrder.billingInfo?.email;
 
     if (customerEmail && status) {
       await sendOrderEmail({
@@ -71,7 +111,7 @@ export async function PUT(req) {
   } catch (err) {
     return NextResponse.json(
       { success: false, message: err.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

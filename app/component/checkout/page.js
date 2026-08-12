@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import productcontext from "../../../context/productcontext";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,7 @@ import Image from "next/image";
 import axios from "axios";
 import { ShieldCheck, Truck, CreditCard } from "lucide-react";
 
-const CheckoutPage = () => {
+const CheckoutContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const couponCode = searchParams.get("coupon") || "";
@@ -68,7 +68,10 @@ const CheckoutPage = () => {
   };
 
   const calculateSubtotal = () => {
-    return cart.reduce((total, item) => total + item.price * (item.qty || 1), 0);
+    return cart.reduce(
+      (total, item) => total + item.price * (item.qty || 1),
+      0,
+    );
   };
 
   const calculateTotal = () => {
@@ -108,7 +111,7 @@ const CheckoutPage = () => {
         localStorage.setItem("lastOrder", JSON.stringify(orderData));
         toast.success("Order Placed via Cash on Delivery! 🚚");
         clearCart();
-        router.push("/admin/order");
+        router.push("/admin/orders");
       } catch (err) {
         console.error("COD Error:", err);
         toast.error("Failed to place COD order. Please try again.");
@@ -145,6 +148,10 @@ const CheckoutPage = () => {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
+              items: cart,
+              billingInfo,
+              shippingInfo: targetShipping,
+              total: finalTotal,
             });
 
             if (verifyRes.data.success) {
@@ -292,15 +299,18 @@ const CheckoutPage = () => {
 
             {/* Payment Method Selector */}
             <Card className="p-6 border border-[#95D7DE]/30 bg-[#001B38] space-y-4">
-              <h2 className="text-xl font-semibold text-white">Payment Method</h2>
+              <h2 className="text-xl font-semibold text-white">
+                Payment Method
+              </h2>
               <div className="grid grid-cols-2 gap-4">
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("razorpay")}
-                  className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 text-sm font-bold transition ${paymentMethod === "razorpay"
+                  className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 text-sm font-bold transition ${
+                    paymentMethod === "razorpay"
                       ? "border-[#95D7DE] bg-[#95D7DE]/20 text-[#95D7DE]"
                       : "border-slate-800 bg-black/50 text-slate-400 hover:text-white"
-                    }`}
+                  }`}
                 >
                   <CreditCard className="w-6 h-6" />
                   <span>Razorpay / UPI / Card</span>
@@ -309,10 +319,11 @@ const CheckoutPage = () => {
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("cod")}
-                  className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 text-sm font-bold transition ${paymentMethod === "cod"
+                  className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 text-sm font-bold transition ${
+                    paymentMethod === "cod"
                       ? "border-[#95D7DE] bg-[#95D7DE]/20 text-[#95D7DE]"
                       : "border-slate-800 bg-black/50 text-slate-400 hover:text-white"
-                    }`}
+                  }`}
                 >
                   <Truck className="w-6 h-6" />
                   <span>Cash on Delivery (COD)</span>
@@ -324,7 +335,9 @@ const CheckoutPage = () => {
           {/* Right Column - Order Summary */}
           <div>
             <Card className="p-6 sticky top-4 border border-[#95D7DE]/30 bg-[#001B38] space-y-5">
-              <h2 className="text-xl font-semibold text-white">Order Summary</h2>
+              <h2 className="text-xl font-semibold text-white">
+                Order Summary
+              </h2>
 
               {cart.length === 0 ? (
                 <p className="text-[#A0A0A0]">Your cart is empty</p>
@@ -365,7 +378,9 @@ const CheckoutPage = () => {
                     )}
                     <div className="flex justify-between text-lg font-bold text-white pt-2 border-t border-slate-800">
                       <span>Total Amount:</span>
-                      <span className="text-[#95D7DE]">₹{calculateTotal()}</span>
+                      <span className="text-[#95D7DE]">
+                        ₹{calculateTotal()}
+                      </span>
                     </div>
                   </div>
 
@@ -373,7 +388,9 @@ const CheckoutPage = () => {
                     onClick={handlePlaceOrder}
                     className="w-full mt-4 p-5 bg-[#95D7DE] hover:bg-[#7FC5CD] text-black font-extrabold text-base rounded-xl transition shadow-lg shadow-[#95D7DE]/20"
                   >
-                    {paymentMethod === "cod" ? "Confirm Order (COD)" : "Pay Now with Razorpay"}
+                    {paymentMethod === "cod"
+                      ? "Confirm Order (COD)"
+                      : "Pay Now with Razorpay"}
                   </Button>
                 </>
               )}
@@ -382,6 +399,23 @@ const CheckoutPage = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const CheckoutFallback = () => (
+  <div className="min-h-screen bg-black flex items-center justify-center text-slate-100">
+    <div className="flex flex-col items-center gap-3">
+      <div className="h-8 w-8 rounded-full border-2 border-[#95D7DE] border-t-transparent animate-spin" />
+      <p className="text-[#A0A0A0] text-sm">Loading checkout...</p>
+    </div>
+  </div>
+);
+
+const CheckoutPage = () => {
+  return (
+    <Suspense fallback={<CheckoutFallback />}>
+      <CheckoutContent />
+    </Suspense>
   );
 };
 
