@@ -170,7 +170,7 @@ const CheckoutContent = () => {
               localStorage.setItem("lastOrder", JSON.stringify(orderDetails));
               toast.success("Payment verified and successful!");
               clearCart();
-              router.push("/admin/order");
+              router.push("/admin/orders");
             } else {
               toast.error("Payment verification failed!");
             }
@@ -306,11 +306,10 @@ const CheckoutContent = () => {
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("razorpay")}
-                  className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 text-sm font-bold transition ${
-                    paymentMethod === "razorpay"
+                  className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 text-sm font-bold transition ${paymentMethod === "razorpay"
                       ? "border-[#95D7DE] bg-[#95D7DE]/20 text-[#95D7DE]"
                       : "border-slate-800 bg-black/50 text-slate-400 hover:text-white"
-                  }`}
+                    }`}
                 >
                   <CreditCard className="w-6 h-6" />
                   <span>Razorpay / UPI / Card</span>
@@ -319,11 +318,10 @@ const CheckoutContent = () => {
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("cod")}
-                  className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 text-sm font-bold transition ${
-                    paymentMethod === "cod"
+                  className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 text-sm font-bold transition ${paymentMethod === "cod"
                       ? "border-[#95D7DE] bg-[#95D7DE]/20 text-[#95D7DE]"
                       : "border-slate-800 bg-black/50 text-slate-400 hover:text-white"
-                  }`}
+                    }`}
                 >
                   <Truck className="w-6 h-6" />
                   <span>Cash on Delivery (COD)</span>
