@@ -3,8 +3,9 @@ import Order from "@/model/order";
 import Product from "@/model/product";
 import User from "@/model/user";
 import { NextResponse } from "next/server";
+import { requireRole } from "@/lib/Authhelper";
 
-export async function GET(req) {
+export const GET = requireRole("admin", async (req) => {
   try {
     await connectDB();
     const { searchParams } = new URL(req.url);
@@ -43,4 +44,5 @@ export async function GET(req) {
   } catch (err) {
     return NextResponse.json({ success: false, message: err.message }, { status: 500 });
   }
-}
+});
+

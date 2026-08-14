@@ -2,8 +2,9 @@ import connectDB from "@/lib/mongodb";
 import User from "@/model/user";
 import Order from "@/model/order";
 import { NextResponse } from "next/server";
+import { requireRole } from "@/lib/Authhelper";
 
-export async function GET() {
+export const GET = requireRole("admin", async () => {
   try {
     await connectDB();
     const users = await User.find({ role: "user" }).select("-password").sort({ createdAt: -1 });
@@ -37,4 +38,5 @@ export async function GET() {
       { status: 500 }
     );
   }
-}
+});
+

@@ -14,13 +14,17 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useProductcontext } from "@/context/productcontext";
 
+import { getCurrentUser, logoutUser } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+
 const Navbar = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const { cart, products } = useProductcontext();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [user, setUser] = useState(null);
 
   const cartCount = Array.isArray(cart)
     ? cart.reduce((sum, item) => sum + (item.qty || 1), 0)
@@ -34,6 +38,18 @@ const Navbar = () => {
     { name: "Contact", href: "/contact" },
   ];
 
+  useEffect(() => {
+    const currentUser = getCurrentUser();
+    setUser(currentUser);
+  }, [pathname]);
+
+  const handleLogout = async () => {
+    await logoutUser();
+    setUser(null);
+    router.push("/login");
+    router.refresh();
+  };
+
   const filteredSearchResults =
     searchQuery.trim() && Array.isArray(products)
       ? products
@@ -44,10 +60,6 @@ const Navbar = () => {
           )
           .slice(0, 5)
       : [];
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full glass-panel border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl">
@@ -168,8 +180,17 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* ACTIONS (CART & LOGIN) */}
+          {/* ACTIONS (CART, ADMIN PANEL & USER) */}
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            {(user?.role === "admin" || user?.role === "superadmin") && (
+              <Link
+                href="/admin"
+                className="px-3.5 py-1.5 text-xs font-bold text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 rounded-full hover:bg-cyan-500/20 transition-all shadow-[0_0_10px_rgba(6,182,212,0.2)] whitespace-nowrap"
+              >
+                {user.role === "superadmin" ? "Superadmin" : "Admin Panel"}
+              </Link>
+            )}
+
             <Link
               href="/cart"
               className="relative flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900/90 border border-slate-800 text-slate-200 hover:text-cyan-400 hover:border-cyan-500/50 hover:shadow-[0_0_15px_rgba(6,182,212,0.2)] transition-all duration-200"
@@ -187,13 +208,27 @@ const Navbar = () => {
               )}
             </Link>
 
-            <Link
-              href="/login"
-              className="hidden sm:flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900/90 border border-slate-800 text-slate-200 hover:text-cyan-400 hover:border-cyan-500/50 hover:shadow-[0_0_15px_rgba(6,182,212,0.2)] transition-all duration-200"
-              aria-label="User Account"
-            >
-              <FaUser className="text-sm sm:text-base" />
-            </Link>
+            {user ? (
+              <div className="hidden sm:flex items-center gap-2">
+                <span className="text-xs font-semibold text-slate-300 max-w-[100px] truncate">
+                  {user.name}
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="px-3 py-1.5 text-xs font-semibold text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-full border border-slate-800 transition"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="hidden sm:flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900/90 border border-slate-800 text-slate-200 hover:text-cyan-400 hover:border-cyan-500/50 hover:shadow-[0_0_15px_rgba(6,182,212,0.2)] transition-all duration-200"
+                aria-label="User Account"
+              >
+                <FaUser className="text-sm sm:text-base" />
+              </Link>
+            )}
 
             {/* MOBILE MENU TOGGLE BUTTON */}
             <button

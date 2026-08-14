@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
+import { setAuthToken } from "@/lib/auth-client";
+
 export default function LoginPage() {
   const router = useRouter();
 
@@ -44,8 +46,18 @@ export default function LoginPage() {
         return;
       }
 
-      localStorage.setItem("token", data.token);
-      router.push("/admin");
+      if (data.token) {
+        setAuthToken(data.token);
+      }
+
+      const role = data.user?.role || "user";
+
+      if (role === "admin" || role === "superadmin") {
+        router.push("/admin");
+      } else {
+        router.push("/");
+      }
+      router.refresh();
     } catch (err) {
       setError("Something went wrong, please try again");
       setLoading(false);

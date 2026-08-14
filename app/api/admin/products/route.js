@@ -1,9 +1,10 @@
 import connectDB from "@/lib/mongodb";
 import Product from "@/model/product";
 import { NextResponse } from "next/server";
+import { requireRole } from "@/lib/Authhelper";
 
 // GET all products for admin
-export async function GET() {
+export const GET = requireRole("admin", async () => {
   try {
     await connectDB();
     const products = await Product.find().sort({ createdAt: -1 });
@@ -14,10 +15,10 @@ export async function GET() {
       { status: 500 }
     );
   }
-}
+});
 
 // POST create product
-export async function POST(req) {
+export const POST = requireRole("admin", async (req) => {
   try {
     await connectDB();
     const body = await req.json();
@@ -55,10 +56,10 @@ export async function POST(req) {
       { status: 500 }
     );
   }
-}
+});
 
 // PUT update product
-export async function PUT(req) {
+export const PUT = requireRole("admin", async (req) => {
   try {
     await connectDB();
     const { id, ...updates } = await req.json();
@@ -85,10 +86,10 @@ export async function PUT(req) {
       { status: 500 }
     );
   }
-}
+});
 
 // DELETE product
-export async function DELETE(req) {
+export const DELETE = requireRole("admin", async (req) => {
   try {
     await connectDB();
     const { searchParams } = new URL(req.url);
@@ -113,4 +114,5 @@ export async function DELETE(req) {
       { status: 500 }
     );
   }
-}
+});
+

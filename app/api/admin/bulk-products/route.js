@@ -1,8 +1,9 @@
 import connectDB from "@/lib/mongodb";
 import Product from "@/model/product";
 import { NextResponse } from "next/server";
+import { requireRole } from "@/lib/Authhelper";
 
-export async function POST(req) {
+export const POST = requireRole("admin", async (req) => {
   try {
     await connectDB();
     const { products } = await req.json();
@@ -41,4 +42,5 @@ export async function POST(req) {
       { status: 500 }
     );
   }
-}
+});
+

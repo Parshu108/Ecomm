@@ -1,7 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Package,
@@ -11,27 +11,50 @@ import {
   MessageSquare,
   BarChart3,
   Upload,
-  Download,
   ShieldAlert,
   ArrowLeft,
   Menu,
   X,
+  Crown,
+  LogOut,
 } from "lucide-react";
-
-const navItems = [
-  { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { name: "Products", href: "/admin/products", icon: Package },
-  { name: "Orders", href: "/admin/orders", icon: ShoppingBag },
-  { name: "Customers", href: "/admin/customers", icon: Users },
-  { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
-  { name: "Coupons", href: "/admin/coupons", icon: Tag },
-  { name: "Reviews", href: "/admin/reviews", icon: MessageSquare },
-  { name: "Bulk Import", href: "/admin/bulk-upload", icon: Upload },
-];
+import { getCurrentUser, logoutUser } from "@/lib/auth-client";
 
 export default function AdminLayout({ children }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const currentUser = getCurrentUser();
+    setUser(currentUser);
+  }, []);
+
+  const navItems = [
+    { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+    { name: "Products", href: "/admin/products", icon: Package },
+    { name: "Orders", href: "/admin/orders", icon: ShoppingBag },
+    { name: "Customers", href: "/admin/customers", icon: Users },
+    { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
+    { name: "Coupons", href: "/admin/coupons", icon: Tag },
+    { name: "Reviews", href: "/admin/reviews", icon: MessageSquare },
+    { name: "Bulk Import", href: "/admin/bulk-upload", icon: Upload },
+  ];
+
+  if (user?.role === "superadmin") {
+    navItems.push({
+      name: "Role Controls",
+      href: "/admin/superadmin",
+      icon: Crown,
+    });
+  }
+
+  const handleLogout = async () => {
+    await logoutUser();
+    router.push("/login");
+    router.refresh();
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row font-sans">
@@ -71,8 +94,14 @@ export default function AdminLayout({ children }) {
               <h1 className="font-bold text-foreground text-lg tracking-tight">
                 NextEcom
               </h1>
-              <p className="text-xs text-primary font-medium">
-                Control Center v2.0
+              <p className="text-xs text-primary font-medium flex items-center gap-1">
+                {user?.role === "superadmin" ? (
+                  <>
+                    <Crown className="w-3 h-3 text-amber-400" /> Superadmin
+                  </>
+                ) : (
+                  "Admin Center v2.0"
+                )}
               </p>
             </div>
           </div>
@@ -103,8 +132,17 @@ export default function AdminLayout({ children }) {
           </nav>
         </div>
 
-        {/* Footer Link back to store */}
-        <div className="pt-6 border-t border-border mt-6">
+        {/* Footer Actions */}
+        <div className="pt-6 border-t border-border mt-6 space-y-2">
+          {user && (
+            <div className="px-3 py-2 bg-secondary/50 rounded-xl mb-3 flex items-center justify-between">
+              <div className="truncate pr-2">
+                <p className="text-xs font-bold text-foreground truncate">{user.name}</p>
+                <p className="text-[10px] text-muted-foreground capitalize">{user.role}</p>
+              </div>
+            </div>
+          )}
+
           <Link
             href="/shop"
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-secondary transition"
@@ -112,6 +150,14 @@ export default function AdminLayout({ children }) {
             <ArrowLeft className="w-4 h-4" />
             <span>Return to Live Store</span>
           </Link>
+
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-destructive hover:bg-destructive/10 transition"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>Sign Out</span>
+          </button>
         </div>
       </aside>
 
@@ -122,3 +168,4 @@ export default function AdminLayout({ children }) {
     </div>
   );
 }
+

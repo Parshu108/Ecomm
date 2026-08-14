@@ -2,9 +2,10 @@ import connectDB from "@/lib/mongodb";
 import Order from "@/model/order";
 import { sendOrderEmail } from "@/lib/email";
 import { NextResponse } from "next/server";
+import { requireRole } from "@/lib/Authhelper";
 
 // GET all orders
-export async function GET(req) {
+export const GET = requireRole("admin", async (req) => {
   try {
     await connectDB();
     const { searchParams } = new URL(req.url);
@@ -20,7 +21,7 @@ export async function GET(req) {
       { status: 500 },
     );
   }
-}
+});
 
 // POST create a new order (used by checkout page, e.g. Cash on Delivery)
 export async function POST(req) {
@@ -64,7 +65,7 @@ export async function POST(req) {
 }
 
 // PUT update order status & send email notification
-export async function PUT(req) {
+export const PUT = requireRole("admin", async (req) => {
   try {
     await connectDB();
     const { orderId, status, returnStatus } = await req.json();
@@ -114,4 +115,5 @@ export async function PUT(req) {
       { status: 500 },
     );
   }
-}
+});
+

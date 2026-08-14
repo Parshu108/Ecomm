@@ -3,8 +3,9 @@ import Order from "@/model/order";
 import Product from "@/model/product";
 import User from "@/model/user";
 import { NextResponse } from "next/server";
+import { requireRole } from "@/lib/Authhelper";
 
-export async function GET() {
+export const GET = requireRole("admin", async () => {
   try {
     await connectDB();
 
@@ -73,4 +74,5 @@ export async function GET() {
       { status: 500 }
     );
   }
-}
+});
+
