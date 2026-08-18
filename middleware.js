@@ -1,4 +1,3 @@
-
 import { NextResponse } from "next/server";
 
 function parseJwt(token) {
@@ -10,7 +9,7 @@ function parseJwt(token) {
       atob(base64)
         .split("")
         .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-        .join("")
+        .join(""),
     );
     const decoded = JSON.parse(jsonPayload);
     if (decoded.exp && decoded.exp * 1000 < Date.now()) {
@@ -32,7 +31,15 @@ export default function middleware(req) {
   const publicAuthPaths = ["/login", "/register"];
   const isAdminRoute = pathname.startsWith("/admin");
   const isSuperAdminRoute = pathname.startsWith("/admin/superadmin");
-  const isPublicAuth = publicAuthPaths.some((path) => pathname.startsWith(path));
+  const isPublicAuth = publicAuthPaths.some((path) =>
+    pathname.startsWith(path),
+  );
+
+  // apne actual route names yaha confirm kar lena
+  const protectedUserRoutes = [ "/cart", "/profile"];
+  const isProtectedUserRoute = protectedUserRoutes.some((path) =>
+    pathname.startsWith(path),
+  );
 
   // 1. Logged in users trying to visit /login or /register
   if (isLoggedIn && isPublicAuth) {
@@ -45,7 +52,9 @@ export default function middleware(req) {
   // 2. Accessing Superadmin-only routes
   if (isSuperAdminRoute) {
     if (!isLoggedIn) {
-      return NextResponse.redirect(new URL(`/login?callbackUrl=${encodeURIComponent(pathname)}`, req.url));
+      return NextResponse.redirect(
+        new URL(`/login?callbackUrl=${encodeURIComponent(pathname)}`, req.url),
+      );
     }
     if (userRole !== "superadmin") {
       return NextResponse.redirect(new URL("/admin", req.url));
@@ -56,10 +65,22 @@ export default function middleware(req) {
   // 3. Accessing Admin routes (/admin, /admin/*)
   if (isAdminRoute) {
     if (!isLoggedIn) {
-      return NextResponse.redirect(new URL(`/login?callbackUrl=${encodeURIComponent(pathname)}`, req.url));
+      return NextResponse.redirect(
+        new URL(`/login?callbackUrl=${encodeURIComponent(pathname)}`, req.url),
+      );
     }
     if (userRole !== "admin" && userRole !== "superadmin") {
       return NextResponse.redirect(new URL("/", req.url));
+    }
+    return NextResponse.next();
+  }
+
+  // 4. Accessing Cart / Profile / other logged-in-user-only routes
+  if (isProtectedUserRoute) {
+    if (!isLoggedIn) {
+      return NextResponse.redirect(
+        new URL(`/login?callbackUrl=${encodeURIComponent(pathname)}`, req.url),
+      );
     }
     return NextResponse.next();
   }
@@ -72,4 +93,3 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico|api/users/signup|images).*)",
   ],
 };
-

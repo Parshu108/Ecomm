@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-export default function SignupPage() {
+function SignupForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -27,7 +29,6 @@ export default function SignupPage() {
       setError("Please fill in all fields");
       return;
     }
-
     if (formData.password.length < 6) {
       setError("Password must be at least 6 characters");
       return;
@@ -50,14 +51,17 @@ export default function SignupPage() {
         return;
       }
 
-      router.push("/login");
+      router.push(
+        callbackUrl
+          ? `/login?callbackUrl=${encodeURIComponent(callbackUrl)}`
+          : "/login",
+      );
     } catch (err) {
       setError("Something went wrong, please try again");
       setLoading(false);
     }
   };
 
-  // Shared classnames for the neumorphic "pressed in" fields.
   const inputClass =
     "w-full rounded-2xl pl-11 pr-3.5 py-3 text-sm text-white bg-[#001B38] outline-none " +
     "border border-transparent transition " +
@@ -70,10 +74,7 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-black">
       <div className="w-full max-w-md">
-        <div
-          className="rounded-[2.5rem] p-10 bg-[#001B38]
-          shadow-[9px_9px_18px_rgba(0,0,0,0.55),-9px_-9px_18px_rgba(149,215,222,0.04)]"
-        >
+        <div className="rounded-[2.5rem] p-10 bg-[#001B38] shadow-[9px_9px_18px_rgba(0,0,0,0.55),-9px_-9px_18px_rgba(149,215,222,0.04)]">
           <div className="mb-8 text-center">
             <h1 className="text-2xl font-semibold text-white">
               Create your account
@@ -84,10 +85,7 @@ export default function SignupPage() {
           </div>
 
           {error && (
-            <div
-              className="mb-5 rounded-2xl px-4 py-3 text-sm text-white bg-[#001B38]
-              shadow-[inset_5px_5px_10px_rgba(0,0,0,0.55),inset_-5px_-5px_10px_rgba(149,215,222,0.04)]"
-            >
+            <div className="mb-5 rounded-2xl px-4 py-3 text-sm text-white bg-[#001B38] shadow-[inset_5px_5px_10px_rgba(0,0,0,0.55),inset_-5px_-5px_10px_rgba(149,215,222,0.04)]">
               {error}
             </div>
           )}
@@ -198,13 +196,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-2xl px-4 py-3 text-sm font-semibold text-black
-              bg-[#95D7DE] hover:bg-[#7FC5CD]
-              shadow-[6px_6px_12px_rgba(0,0,0,0.5),-6px_-6px_12px_rgba(149,215,222,0.03)]
-              active:shadow-[inset_5px_5px_10px_rgba(0,0,0,0.55),inset_-5px_-5px_10px_rgba(149,215,222,0.04)]
-              disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-[#95D7DE]/30
-              disabled:shadow-[inset_5px_5px_10px_rgba(0,0,0,0.55),inset_-5px_-5px_10px_rgba(149,215,222,0.04)]
-              transition"
+              className="w-full rounded-2xl px-4 py-3 text-sm font-semibold text-black bg-[#95D7DE] hover:bg-[#7FC5CD] shadow-[6px_6px_12px_rgba(0,0,0,0.5),-6px_-6px_12px_rgba(149,215,222,0.03)] active:shadow-[inset_5px_5px_10px_rgba(0,0,0,0.55),inset_-5px_-5px_10px_rgba(149,215,222,0.04)] disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-[#95D7DE]/30 disabled:shadow-[inset_5px_5px_10px_rgba(0,0,0,0.55),inset_-5px_-5px_10px_rgba(149,215,222,0.04)] transition"
             >
               {loading ? "Creating account..." : "Create account"}
             </button>
@@ -213,7 +205,11 @@ export default function SignupPage() {
           <p className="mt-7 text-center text-sm text-[#A0A0A0]">
             Already have an account?{" "}
             <Link
-              href="/login"
+              href={
+                callbackUrl
+                  ? `/login?callbackUrl=${encodeURIComponent(callbackUrl)}`
+                  : "/login"
+              }
               className="font-medium hover:underline text-[#95D7DE]"
             >
               Log in
@@ -222,5 +218,13 @@ export default function SignupPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={null}>
+      <SignupForm />
+    </Suspense>
   );
 }

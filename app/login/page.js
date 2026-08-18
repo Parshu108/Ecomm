@@ -1,18 +1,14 @@
 "use client";
-
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-
 import { setAuthToken } from "@/lib/auth-client";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -51,11 +47,12 @@ export default function LoginPage() {
       }
 
       const role = data.user?.role || "user";
+      const callbackUrl = searchParams.get("callbackUrl");
 
       if (role === "admin" || role === "superadmin") {
-        router.push("/admin");
+        router.push(callbackUrl || "/admin");
       } else {
-        router.push("/");
+        router.push(callbackUrl || "/");
       }
       router.refresh();
     } catch (err) {
@@ -64,7 +61,6 @@ export default function LoginPage() {
     }
   };
 
-  // Shared classnames for the neumorphic "pressed in" fields.
   const inputClass =
     "w-full rounded-2xl pl-11 pr-3.5 py-3 text-sm text-white bg-[#001B38] outline-none " +
     "border border-transparent transition " +
@@ -77,10 +73,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-black">
       <div className="w-full max-w-md">
-        <div
-          className="rounded-[2.5rem] p-10 bg-[#001B38]
-          shadow-[9px_9px_18px_rgba(0,0,0,0.55),-9px_-9px_18px_rgba(149,215,222,0.04)]"
-        >
+        <div className="rounded-[2.5rem] p-10 bg-[#001B38] shadow-[9px_9px_18px_rgba(0,0,0,0.55),-9px_-9px_18px_rgba(149,215,222,0.04)]">
           <div className="mb-8 text-center">
             <h1 className="text-2xl font-semibold text-white">Welcome back</h1>
             <p className="mt-2 text-sm text-[#A0A0A0]">
@@ -89,10 +82,7 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <div
-              className="mb-5 rounded-2xl px-4 py-3 text-sm text-white bg-[#001B38]
-              shadow-[inset_5px_5px_10px_rgba(0,0,0,0.55),inset_-5px_-5px_10px_rgba(149,215,222,0.04)]"
-            >
+            <div className="mb-5 rounded-2xl px-4 py-3 text-sm text-white bg-[#001B38] shadow-[inset_5px_5px_10px_rgba(0,0,0,0.55),inset_-5px_-5px_10px_rgba(149,215,222,0.04)]">
               {error}
             </div>
           )}
@@ -177,13 +167,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-2xl px-4 py-3 text-sm font-semibold text-black
-              bg-[#95D7DE] hover:bg-[#7FC5CD]
-              shadow-[6px_6px_12px_rgba(0,0,0,0.5),-6px_-6px_12px_rgba(149,215,222,0.03)]
-              active:shadow-[inset_5px_5px_10px_rgba(0,0,0,0.55),inset_-5px_-5px_10px_rgba(149,215,222,0.04)]
-              disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-[#95D7DE]/30
-              disabled:shadow-[inset_5px_5px_10px_rgba(0,0,0,0.55),inset_-5px_-5px_10px_rgba(149,215,222,0.04)]
-              transition"
+              className="w-full rounded-2xl px-4 py-3 text-sm font-semibold text-black bg-[#95D7DE] hover:bg-[#7FC5CD] shadow-[6px_6px_12px_rgba(0,0,0,0.5),-6px_-6px_12px_rgba(149,215,222,0.03)] active:shadow-[inset_5px_5px_10px_rgba(0,0,0,0.55),inset_-5px_-5px_10px_rgba(149,215,222,0.04)] disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-[#95D7DE]/30 disabled:shadow-[inset_5px_5px_10px_rgba(0,0,0,0.55),inset_-5px_-5px_10px_rgba(149,215,222,0.04)] transition"
             >
               {loading ? "Logging in..." : "Log in"}
             </button>
@@ -201,5 +185,13 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   );
 }

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import {
   FaShoppingCart,
@@ -10,18 +10,23 @@ import {
   FaSearch,
   FaBars,
   FaTimes,
+  FaSignOutAlt,
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProductcontext } from "@/context/productcontext";
 
-
 const Navbar = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const { cart, products } = useProductcontext();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  // ✅ Auth state
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
   const cartCount = Array.isArray(cart)
     ? cart.reduce((sum, item) => sum + (item.qty || 1), 0)
@@ -45,9 +50,44 @@ const Navbar = () => {
           )
           .slice(0, 5)
       : [];
+
   useEffect(() => {
     setMounted(true);
+    fetchUser();
   }, []);
+
+  // ✅ har pathname change par bhi refresh karo (login/logout ke baad navigate hone par)
+  useEffect(() => {
+    fetchUser();
+  }, [pathname]);
+
+  const fetchUser = async () => {
+    try {
+      const res = await fetch("/api/users/me");
+
+      if (!res.ok) {
+        // 401 = not logged in / invalid token — ye normal case hai, error nahi
+        setUser(null);
+        return;
+      }
+
+      const data = await res.json();
+      setUser(data.user || null);
+    } catch {
+      setUser(null);
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    await fetch("/api/users/logout", { method: "POST" });
+    setUser(null);
+    setMobileMenuOpen(false);
+    router.push("/login");
+    router.refresh();
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full glass-panel border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl">
       <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
@@ -134,7 +174,6 @@ const Navbar = () => {
               )}
             </div>
 
-            {/* SEARCH DROPDOWN RESULTS */}
             {searchFocused && filteredSearchResults.length > 0 && (
               <div className="absolute top-full left-0 right-0 mt-2 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden z-50 p-2">
                 {filteredSearchResults.map((item) => (
@@ -167,7 +206,7 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* ACTIONS (CART & LOGIN) */}
+          {/* ACTIONS (CART & LOGIN/PROFILE) */}
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             <Link
               href="/cart"
@@ -186,13 +225,36 @@ const Navbar = () => {
               )}
             </Link>
 
-            <Link
-              href="/login"
-              className="hidden sm:flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900/90 border border-slate-800 text-slate-200 hover:text-cyan-400 hover:border-cyan-500/50 hover:shadow-[0_0_15px_rgba(6,182,212,0.2)] transition-all duration-200"
-              aria-label="User Account"
-            >
-              <FaUser className="text-sm sm:text-base" />
-            </Link>
+            {/* ✅ Auth-aware account button — jab tak auth load ho raha hai kuch mat dikhao */}
+            {!authLoading &&
+              (user ? (
+                <div className="hidden sm:flex items-center gap-2">
+                  <Link
+                    href="/profile"
+                    className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900/90 border border-slate-800 text-slate-200 hover:text-cyan-400 hover:border-cyan-500/50 hover:shadow-[0_0_15px_rgba(6,182,212,0.2)] transition-all duration-200"
+                    aria-label="My Profile"
+                    title={user.name}
+                  >
+                    <FaUser className="text-sm sm:text-base" />
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900/90 border border-slate-800 text-slate-200 hover:text-red-400 hover:border-red-500/50 transition-all duration-200"
+                    aria-label="Logout"
+                  >
+                    <FaSignOutAlt className="text-sm sm:text-base" />
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  href="/login"
+                  prefetch={false}
+                  className="hidden sm:flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900/90 border border-slate-800 text-slate-200 hover:text-cyan-400 hover:border-cyan-500/50 hover:shadow-[0_0_15px_rgba(6,182,212,0.2)] transition-all duration-200"
+                  aria-label="User Account"
+                >
+                  <FaUser className="text-sm sm:text-base" />
+                </Link>
+              ))}
 
             {/* MOBILE MENU TOGGLE BUTTON */}
             <button
@@ -230,7 +292,6 @@ const Navbar = () => {
               />
             </div>
 
-            {/* MOBILE SEARCH RESULTS */}
             {searchQuery.trim() && filteredSearchResults.length > 0 && (
               <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden p-2 space-y-1">
                 {filteredSearchResults.map((item) => (
@@ -278,14 +339,35 @@ const Navbar = () => {
                   {link.name}
                 </Link>
               ))}
-              {/* Account link included here for very small screens where the header icon is hidden */}
-              <Link
-                href="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="sm:hidden flex items-center gap-2 px-4 py-3 rounded-xl text-base font-medium text-slate-300 hover:bg-slate-900"
-              >
-                <FaUser className="text-sm" /> My Account
-              </Link>
+
+              {/* ✅ Auth-aware mobile account link */}
+              {!authLoading &&
+                (user ? (
+                  <>
+                    <Link
+                      href="/profile"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="sm:hidden flex items-center gap-2 px-4 py-3 rounded-xl text-base font-medium text-slate-300 hover:bg-slate-900"
+                    >
+                      <FaUser className="text-sm" /> My Profile
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center gap-2 px-4 py-3 rounded-xl text-base font-medium text-red-400 hover:bg-slate-900 text-left"
+                    >
+                      <FaSignOutAlt className="text-sm" /> Logout
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    href="/login"
+                    prefetch={false}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="sm:hidden flex items-center gap-2 px-4 py-3 rounded-xl text-base font-medium text-slate-300 hover:bg-slate-900"
+                  >
+                    <FaUser className="text-sm" /> My Account
+                  </Link>
+                ))}
             </nav>
           </motion.div>
         )}
